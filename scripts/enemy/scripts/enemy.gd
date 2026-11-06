@@ -2,10 +2,10 @@ class_name Enemy
 extends Node3D
 
 
-# ------ @onready ------
-@onready var resource := $CharacterResource
-@onready var seq_gen := $SequenceGenerator
-@onready var act_data := $ActionDatabase
+@export_category("Resoruces")
+@export var resource :CharacterResource= CharacterResource.new()
+@export var seq_gen :SequenceGenerator = SequenceGenerator.new() ### ฝากแก้
+@export var act_data :ActionDatabase = ActionDatabase.new()
 
 
 # ------ STAGE ------
@@ -26,7 +26,7 @@ var cur_idle: StringName = &""
 
 # ------ TIME ------
 @export_category("TIME MANAGER")
-var current_time: float = 0.0  ## Time always tick
+var current_time: float ## Time always tick
 
 var action_clock: float = 0.0  ## To think the wait before actions
 var clocking: bool = true
@@ -36,7 +36,7 @@ var clocking: bool = true
 
 # ------ ANIMATION ------
 @export_category("ANIMATION")
-@export var animation: AnimationPlayer
+@export var animation: AnimatedSprite3D
 var animation_counter: float = 0.0
 
 
@@ -47,10 +47,46 @@ signal enemy_timeout
 # ------------------------------
 # INTERFACE
 # ------------------------------
+func _ready() -> void:
+	var animation_names: PackedStringArray = animation.sprite_frames.get_animation_names()
+	
+	for name in animation_names:
+		
+		var prefix = name.split("_")[0]
+		var suffix = name.split("_")[1]
+		act_data.possible_next_idle[name]=[]
+		if (prefix=="idle"):
+			act_data.all_idle.append(name)
+			act_data.possible_next_attack[name]=[]
+
+			act_data.possible_next_trick[name]=[]
+	
+	for name in animation_names:
+		
+		var prefix = name.split("_")[0]
+		var suffix = name.split("_")[1]
+
+		if (prefix=="slash"):
+			act_data.all_attack.append(name)
+			act_data.possible_next_attack["idle_"+suffix].append(name)
+			act_data.possible_next_idle[name].append("idle_"+suffix)
+		if (prefix=="trick"):
+			act_data.all_tricks.append(name)
+			var sufsuf=suffix.split("2")
+			act_data.possible_next_trick["idle_"+sufsuf[0]].append(name)
+			act_data.possible_next_idle[name].append("idle_"+sufsuf[0])
+			
+	animation.animation_finished.connect(_on_animation_finish_handler)
+	animation.play(act_data.all_idle.pick_random())
+	on_start()
+	
+		
 
 func on_start() -> void:
 	current_time = seq_gen.get_duration()
-	timeline = seq_gen.roll_sequence(cur_level)
+	#timeline = seq_gen.roll_sequence(cur_level)
+	#print (timeline)
+	timeline = ["2,t", "2,s","1,t","1,s"]
 
 
 func set_cur_state(s: STATE) -> void:  ## 0 = PASSIVE, 1 = ATTACK, 2 = DOWN
@@ -68,16 +104,16 @@ func is_clocking() -> bool:
 
 
 func get_stability() -> int:
-	var stability: int = 0
-	for t: String in timeline:
-		var act: String = t.split(",")[1]
-		if act == "s":
-			stability += 1
-	return stability
+	return resource.cur_stab
 
 func get_hp() -> int:
 	return resource.get_hp()
 
+func got_parried()->void:
+	resource.cur_stab-=1
+	if resource.cur_stab<=0:
+		set_cur_state(Enemy.STATE.DOWN)
+		resource.recover_from_down()
 
 # ------------------------------
 # INITIALIZING
@@ -93,9 +129,12 @@ func _duration_receive(duration: float) -> void:
 # ------------------------------
 
 func _play_animation(anim: StringName) -> void:
-	animation.play(anim)
+	if animation:
+		animation.play(anim)
 
-
+func _on_animation_finish_handler():
+	animation.play(act_data.possible_next_idle[animation.animation].pick_random())
+	
 # ------------------------------
 # ANIMATION SEQUENCING
 # ------------------------------
@@ -106,12 +145,12 @@ func _get_random_trick() -> StringName:
 func _get_random_attack() -> StringName:
 	return act_data.random_attack()
 
-
 func _get_next_trick(previous) -> StringName:
 	return act_data.get_next_trick(previous)
 
 func _get_next_attack(previous) -> StringName:
 	return act_data.get_next_attack(previous)
+
 
 
 # ------------------------------
@@ -161,7 +200,6 @@ func _process(delta: float) -> void:
 			_tick_time(delta)
 	else:
 		enemy_timeout.emit()
-		_play_animation(_get_random_attack())
 		return
 	
 	if not action_clock == 0.0:
@@ -176,7 +214,7 @@ func _process(delta: float) -> void:
 		_pop_front()
 	
 	if cur_act.size() == 2:
-		action_clock = cur_act[0]
+		action_clock = float(cur_act[0])
 		cur_act.pop_front()
 	elif cur_act.size() == 1:
 		_take_action(cur_act.pop_front())

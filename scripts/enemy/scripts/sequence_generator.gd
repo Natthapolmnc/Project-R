@@ -6,7 +6,7 @@ extends Resource
 @export var attack_scaling: Dictionary = { 1: 1, 2: 1, 3: 2 }
 
 
-var distributed_duration: float  ## Full time duration distributed to this enemy
+@export var distributed_duration: float  ## Full time duration distributed to this enemy
 
 
 func roll_sequence(level: int) -> Array:
@@ -32,7 +32,7 @@ func roll_sequence2(timestamp: Array[int], trick_size: int, attack_size: int) ->
 	for a in attack_size - 1:
 		total_act.append("s")
 	
-	for i in range(0, timestamp.size):
+	for i in range(0, timestamp.size()):
 		var next_stamp: int = timestamp.pop_front()
 		var next_act: String = total_act.pop_front() if not total_act.is_empty() else "s"
 		

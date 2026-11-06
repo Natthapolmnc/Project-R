@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://dpnmcpdtawhya"]
+
+[ext_resource type="PackedScene" uid="uid://ucjsdukdv2fw" path="res://scripts/enemy/prefabs/enemy.tscn" id="1_8uh7m"]
+[ext_resource type="PackedScene" uid="uid://cuf3qkjpb5nuo" path="res://scripts/player/prefabs/player.tscn" id="2_6uqi0"]
+[ext_resource type="Script" uid="uid://cstqna7h7vgek" path="res://scripts/enemy/scripts/action_database.gd" id="2_ppyta"]
+[ext_resource type="Script" uid="uid://dtk122wl6n2vg" path="res://scripts/enemy/scripts/sequence_generator.gd" id="2_ykrsh"]
+
+[sub_resource type="Resource" id="Resource_g14j6"]
+script = ExtResource("2_ykrsh")
+distributed_duration = 10.0
+metadata/_custom_type_script = "uid://dtk122wl6n2vg"
+
+[sub_resource type="Resource" id="Resource_6uqi0"]
+script = ExtResource("2_ppyta")
+metadata/_custom_type_script = "uid://cstqna7h7vgek"
+
+[node name="Node3D" type="Node3D" unique_id=1272061223]
+
+[node name="enemy_spawner" type="Marker3D" parent="." unique_id=626950176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.22441763, 0, -0.1200843)
+
+[node name="Enemy" parent="enemy_spawner" unique_id=1970614869 instance=ExtResource("1_8uh7m")]
+transform = Transform3D(0.986444, 0, -0.16409814, 0, 1, 0, 0.16409814, 0, 0.986444, 0.08224532, 0, -0.19189362)
+seq_gen = SubResource("Resource_g14j6")
+act_data = SubResource("Resource_6uqi0")
+
+[node name="player_spawner" type="Marker3D" parent="." unique_id=571875521]
+
+[node name="Player" parent="player_spawner" unique_id=1403872936 node_paths=PackedStringArray("cur_enemy") instance=ExtResource("2_6uqi0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0017477274, 0, 0.00034439564)
+cur_enemy = NodePath("../../enemy_spawner/Enemy")

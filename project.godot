@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="20-sec-ronin"
-run/main_scene="uid://cuf3qkjpb5nuo"
+run/main_scene="uid://dpnmcpdtawhya"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 

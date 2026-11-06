@@ -123,6 +123,14 @@ region = Rect2(192, 96, 48, 48)
 atlas = ExtResource("2_jk1h0")
 region = Rect2(240, 96, 48, 48)
 
+[sub_resource type="AtlasTexture" id="AtlasTexture_mkdbq"]
+atlas = ExtResource("2_jk1h0")
+region = Rect2(144, 144, 48, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_h7d8n"]
+atlas = ExtResource("2_jk1h0")
+region = Rect2(144, 144, 48, 48)
+
 [sub_resource type="SpriteFrames" id="SpriteFrames_bhunq"]
 animations = [{
 "frames": [{
@@ -244,6 +252,17 @@ animations = [{
 "loop": 0,
 "name": &"slash_u2d",
 "speed": 10.0
+}, {
+"frames": [{
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_mkdbq")
+}, {
+"duration": 2.0,
+"texture": SubResource("AtlasTexture_h7d8n")
+}],
+"loop": 0,
+"name": &"stun_lock",
+"speed": 5.0
 }]
 
 [node name="Player" type="Node3D" unique_id=1403872936]
@@ -252,10 +271,8 @@ script = ExtResource("1_7wv2m")
 [node name="visual" type="AnimatedSprite3D" parent="." unique_id=552605342]
 texture_filter = 2
 sprite_frames = SubResource("SpriteFrames_bhunq")
-animation = &"parry"
-frame = 3
-frame_progress = 1.0
+animation = &"stun_lock"
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2062757244]
-transform = Transform3D(0.99333704, 0, -0.11524548, 0, 1, 0, 0.11524548, 0, 0.99333704, 0.14876772, 0.09119345, 0.47608328)
-fov = 60.9
+transform = Transform3D(0.9590838, 0, -0.28312236, 0, 1, 0, 0.28312236, 0, 0.9590838, 0.018546239, 0.09119345, 0.47608328)
+fov = 53.0
