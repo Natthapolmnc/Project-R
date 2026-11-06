@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://ucjsdukdv2fw"]
+
+[ext_resource type="Script" uid="uid://rnp6f337siar" path="res://enemy/scripts/enemy.gd" id="1_qtrb2"]
+[ext_resource type="Script" uid="uid://dtcta1nqk5pxq" path="res://enemy/scripts/character_resource.gd" id="2_kx3vi"]
+[ext_resource type="Script" uid="uid://dtk122wl6n2vg" path="res://enemy/scripts/sequence_generator.gd" id="3_kx3vi"]
+[ext_resource type="Script" uid="uid://cstqna7h7vgek" path="res://enemy/scripts/action_database.gd" id="4_dsekt"]
+
+[node name="Enemy" type="Node3D" unique_id=1970614869]
+script = ExtResource("1_qtrb2")
+
+[node name="Sprite3D" type="Sprite3D" parent="." unique_id=1014763598]
+
+[node name="CharacterResource" type="Node3D" parent="." unique_id=1331291319]
+script = ExtResource("2_kx3vi")
+
+[node name="SequenceGenerator" type="Node3D" parent="." unique_id=142634372]
+script = ExtResource("3_kx3vi")
+
+[node name="ActionDatabase" type="Node3D" parent="." unique_id=480038944]
+script = ExtResource("4_dsekt")
