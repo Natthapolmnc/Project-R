@@ -2,29 +2,33 @@
 
 Godot 4.5+ GDScript files:
 
-- `enemy.gd` — encounter clock, action queue, stance changes, combat state and player-facing windows.
-- `enemy_move.gd` — one authored attack/trick and its stance transition.
+- `enemy.gd` — encounter clock, action queue, stance changes, combat state and player-facing windows; uses one AnimationPlayer.
+- `enemy_move.gd` — one authored attack/trick, its AnimationPlayer clip and stance transition.
 - `enemy_profile.gd` — enemy personality, available moves and idle animation for each stance.
 - `sequence_generator.gd` — static generator for absolute `time,action` sequence entries.
 - `character_resource.gd` — HP and stability.
 - `combat_effects.gd` — global particle, camera-shake and screen-flash controller.
 - `combat_effect_preset.gd` — editable per-effect settings shared by player and enemy.
 - `combat_fx.tscn` — ready-to-configure scene for the global `CombatFX` Autoload.
+- `combat_fx_example.tscn` — example global manager with two configured effect presets.
+- `example_sparks.tscn` — simple CPUParticles3D sparks used by the example presets.
 
 ## Scene setup
 
 ```text
 Enemy (Node3D; enemy.gd)
-├── Sprite (AnimatedSprite3D)
+├── Visual (Sprite3D, MeshInstance3D, etc.; animated by AnimationPlayer)
 ├── Timing (AnimationPlayer)
 └── EffectOrigin (Marker3D; optional)
 
 /root/CombatFX (global Autoload; combat_fx.tscn)
 ```
 
-Assign `Sprite` to **Animation** and `Timing` to **Timing Player** on the Enemy node. Create and assign an `EnemyProfile` and a `CharacterResource` in the Inspector. Your `SpriteFrames` must have idle and move clips; **move clips and `down` must not loop**. Optionally assign `EffectOrigin` to **Effect Origin**; otherwise the enemy's transform is used for particles.
+Assign `Timing` to **Timing Player** on the Enemy node. This is now the **only animation controller**: it plays idle, attack, trick, down and death clips. You do not need `AnimatedSprite3D`, and there is no `AnimatedSprite3D` export on Enemy. Use AnimationPlayer property tracks to animate your chosen Visual node (e.g., change Sprite3D textures, frame, pose, scale or transforms), and method tracks to control combat windows. Create and assign an `EnemyProfile` and a `CharacterResource` in the Inspector. **Idle clips should loop; attack, trick and down clips must not loop**. Optionally assign `EffectOrigin` to **Effect Origin**; otherwise the enemy's transform is used for particles.
 
 **Required global setup:** Project → Project Settings → Globals → Autoload: add `res://enemy_combat/combat_fx.tscn` and name it **`CombatFX`**. This is shared by every player and enemy instance. Open `combat_fx.tscn` in the editor to configure reusable effect presets.
+
+**Try the prepared example:** Instead, register `res://enemy_combat/combat_fx_example.tscn` under the same Autoload name, **`CombatFX`**. The example contains two presets—`enemy_slash` (warm impact) and `player_parry` (cool blue flash)—both using `example_sparks.tscn`. You should register only **one** CombatFX Autoload, either the blank or example scene.
 
 The player and enemy remain stationary. Stances are visual poses, not world positions.
 
@@ -36,15 +40,17 @@ Example:
 - `idle_by_stance = { &"left": &"idle_left", &"right": &"idle_right" }`
 - `sequence_pattern = Delay Before Attack` (or Random)
 - `moves` contains `EnemyMove` resources, for example:
-  - Attack: `from_stance = "left"`, `to_stance = "left"`, `sprite_animation = "slash_left"`, `timing_animation = "slash_left"`
-  - Trick: `from_stance = "left"`, `to_stance = "right"`, `sprite_animation = "trick_left2right"`, `timing_animation = "trick_left2right"`
+  - Attack: `from_stance = "left"`, `to_stance = "left"`, `animation_name = "slash_left"`
+  - Trick: `from_stance = "left"`, `to_stance = "right"`, `animation_name = "trick_left2right"`
   - Include moves for the other stances too, or the controller will warn and skip an unavailable event.
 
 `EnemyMove` makes the stance transition explicit. You no longer need to parse names like `trick_left2right` to deduce which idle comes next.
 
+For compatibility, old `EnemyMove` resources with `timing_animation` or `sprite_animation` fields are still readable through hidden migration properties. **For new moves, set `animation_name`.**
+
 ### Configure AnimationPlayer timing clips
 
-For every move, create an AnimationPlayer clip with the name given by `timing_animation`, and set its length to match the corresponding **AnimatedSprite3D clip**. Add a **Call Method Track** targeting the parent `Enemy` node (for the default AnimationPlayer root, track path `.`). Godot's AnimationPlayer method tracks invoke functions at precise points during a clip.
+Create AnimationPlayer clips named `idle_left`, `idle_right`, `slash_left`, `trick_left2right`, etc., matching the profile's idle names and each move's `animation_name`. Put **visual property tracks and combat method tracks on the same clip**. Add a **Call Method Track** targeting the parent `Enemy` node (for the default AnimationPlayer root, track path `.`). The AnimationPlayer manages both animation playback and combat timings, so there are no separate animation lengths to synchronize.
 
 Example real attack `slash_left` lasting 0.70 s:
 
@@ -58,9 +64,9 @@ The Enemy has only three states: `PASSIVE`, `ATTACK`, and `DOWN`. `ATTACK` inclu
 
 For a trick clip, **do not open a parry window**. At its reveal frame, call `animation_reveal_trick()`. You can open a player attack window on any move by calling `animation_set_attackable(true)` and close it later with `false`.
 
-You no longer need `animation_set_phase()` keys. The method remains as a no-op for compatibility with existing animations. The controller automatically returns to PASSIVE when the non-looping AnimatedSprite3D clip finishes.
+You no longer need `animation_set_phase()` keys. The method remains as a no-op for compatibility with existing animations. The controller automatically returns to PASSIVE when the non-looping AnimationPlayer move clip finishes.
 
-**Timing warning:** AnimatedSprite3D and AnimationPlayer both play their own clips. Keep their duration, speed and start time aligned. The Enemy controller starts and slows both together. If the animations differ in length, the sprite completion wins and stops the timing clip. Set `SequenceGenerator.MIN_GAP` to a safe interval for the authored moves; overdue sequence events wait until the active move ends.
+**Timing warning:** An AnimationPlayer clip that loops will not produce the `animation_finished` event needed for stance changes. Make only your idle clips loop. Set `SequenceGenerator.MIN_GAP` to a safe interval for the authored moves; overdue sequence events wait until the active move ends.
 
 ### Player interactions
 
@@ -76,7 +82,7 @@ enemy.trick_revealed.connect(_on_enemy_trick)
 enemy.vulnerability_changed.connect(_on_enemy_windows_changed)
 ```
 
-`receive_parry()` accepts a parry only during a real attack's animation-defined parry window. An accepted parry cancels the current action and reduces stability. At zero stability, the enemy enters DOWN and is attackable. When the non-looping `down` sprite finishes, stability resets and the enemy resumes its idle stance. A successful attack during DOWN reduces HP.
+`receive_parry()` accepts a parry only during a real attack's animation-defined parry window. An accepted parry cancels the current action and reduces stability. At zero stability, the enemy enters DOWN and is attackable. When the non-looping `down` AnimationPlayer clip finishes, stability resets and the enemy resumes its idle stance. A successful attack during DOWN reduces HP.
 
 `strike_reached` is the point where your **player/combat system** should resolve an unblocked hit. This package does not decide player HP or parry input timing for you. A trick has no strike event.
 

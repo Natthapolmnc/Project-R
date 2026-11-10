@@ -9,8 +9,18 @@ enum Kind { ATTACK, TRICK }
 @export var from_stance: StringName = &"center"
 @export var to_stance: StringName = &"center"
 
-## Name inside AnimatedSprite3D's SpriteFrames.
-@export var sprite_animation: StringName = &""
+## The only animation this move plays, inside Enemy's AnimationPlayer.
+## Use property/method tracks to animate the sprite and combat windows.
+@export var animation_name: StringName = &""
 
-## Name inside AnimationPlayer. Use method keys to control combat windows.
-@export var timing_animation: StringName = &""
+## Hidden migration fields for old EnemyMove resources.
+@export_storage var timing_animation: StringName = &""
+@export_storage var sprite_animation: StringName = &""
+
+
+func get_animation_name() -> StringName:
+	if animation_name != &"":
+		return animation_name
+	if timing_animation != &"":
+		return timing_animation
+	return sprite_animation

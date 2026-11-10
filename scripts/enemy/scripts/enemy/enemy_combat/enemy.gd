@@ -29,7 +29,7 @@ enum State { PASSIVE, ATTACK, DOWN }
 @export_range(0.05, 1.0, 0.05) var slow_down: float = 0.5
 
 @export_category("Animation")
-@export var animation: AnimatedSprite3D
+## The sole controller for idle, attack, trick, down and death animations.
 @export var timing_player: AnimationPlayer
 
 @export_category("Effects")
@@ -56,20 +56,20 @@ var _timeout_emitted: bool = false
 
 
 func _ready() -> void:
-	if profile == null or animation == null or timing_player == null:
-		push_error("Enemy needs a Profile, AnimatedSprite3D and AnimationPlayer")
+	if profile == null or timing_player == null:
+		push_error("Enemy needs an EnemyProfile and AnimationPlayer")
 		set_process(false)
 		return
 
 	# Give each enemy its own HP/stability values even if scenes share a Resource.
 	resource = CharacterResource.new() if resource == null else resource.duplicate(true) as CharacterResource
-	animation.animation_finished.connect(_on_sprite_animation_finished)
+	timing_player.animation_finished.connect(_on_animation_finished)
 	set_clocking(true)
 	start_sequence()
 
 
 func start_sequence(duration: float = -1.0) -> void:
-	if profile == null or animation == null or timing_player == null:
+	if profile == null or timing_player == null:
 		return
 	if duration > 0.0:
 		sequence_duration = duration
@@ -117,7 +117,7 @@ func _load_timeline(entries: Array[String]) -> void:
 
 		var stamp: float = time_text.to_float()
 		if stamp < 0.0 or stamp >= sequence_duration:
-			push_warning("Sequence time %.2`f must be within [0, %.2f)" % [stamp, sequence_duration])
+			push_warning("Sequence time %.2f must be within [0, %.2f)" % [stamp, sequence_duration])
 			continue
 
 		var code: String = parts[1].strip_edges().to_lower()
@@ -168,23 +168,20 @@ func _start_move(code: String) -> bool:
 	if move == null:
 		push_warning("No %s move available from stance '%s'" % [code, current_stance])
 		return false
-	if animation.sprite_frames == null or not animation.sprite_frames.has_animation(move.sprite_animation):
-		push_warning("Missing SpriteFrames animation: %s" % move.sprite_animation)
-		return false
-	if not timing_player.has_animation(move.timing_animation):
-		push_warning("Missing AnimationPlayer timing clip: %s" % move.timing_animation)
+	var animation_name: StringName = move.get_animation_name()
+	if animation_name == &"" or not timing_player.has_animation(animation_name):
+		push_warning("Missing AnimationPlayer move: %s" % animation_name)
 		return false
 
 	current_move = move
 	_set_windows(false, false)
 	_set_state(State.ATTACK)
-	animation.play(move.sprite_animation)
-	timing_player.play(move.timing_animation)
+	timing_player.play(animation_name)
 	action_started.emit(move)
 	return true
 
 
-func _on_sprite_animation_finished() -> void:
+func _on_animation_finished(_animation_name: StringName) -> void:
 	if _dead:
 		return
 	if state == State.DOWN:
@@ -204,17 +201,15 @@ func _on_sprite_animation_finished() -> void:
 
 func _play_idle() -> void:
 	var idle: StringName = profile.get_idle(current_stance)
-	if idle == &"" or animation.sprite_frames == null or not animation.sprite_frames.has_animation(idle):
+	if idle == &"" or not timing_player.has_animation(idle):
 		push_warning("No idle animation for stance '%s'" % current_stance)
 		return
-	animation.play(idle)
+	timing_player.play(idle)
 
 
 func _cancel_action() -> void:
 	if timing_player != null:
 		timing_player.stop()
-	if animation != null:
-		animation.stop()
 	current_move = null
 	_set_windows(false, false)
 
@@ -312,9 +307,9 @@ func receive_hit() -> bool:
 func _enter_down() -> void:
 	_set_state(State.DOWN)
 	_set_windows(true, false)
-	if profile.down_animation != &"" and animation.sprite_frames.has_animation(profile.down_animation):
-		animation.play(profile.down_animation)
-	# The down animation should be non-looping. On finish, stability recovers.
+	if profile.down_animation != &"" and timing_player.has_animation(profile.down_animation):
+		timing_player.play(profile.down_animation)
+	# The down AnimationPlayer clip should be non-looping. On finish, stability recovers.
 	# If there is no down animation, call recover_from_down() externally.
 
 
@@ -330,8 +325,8 @@ func recover_from_down() -> void:
 func _die() -> void:
 	_cancel_action()
 	_dead = true
-	if profile.death_animation != &"" and animation.sprite_frames.has_animation(profile.death_animation):
-		animation.play(profile.death_animation)
+	if profile.death_animation != &"" and timing_player.has_animation(profile.death_animation):
+		timing_player.play(profile.death_animation)
 	enemy_died.emit()
 
 
@@ -365,8 +360,6 @@ func get_hp() -> int:
 func set_clocking(enabled: bool) -> void:
 	clocking = enabled
 	var speed: float = 1.0 if enabled else slow_down
-	if animation != null:
-		animation.speed_scale = speed
 	if timing_player != null:
 		timing_player.speed_scale = speed
 
