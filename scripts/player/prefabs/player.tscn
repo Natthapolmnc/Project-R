@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cwn4w0hj780st" path="res://scripts/player/scripts/player.gd" id="1_7wv2m"]
 [ext_resource type="Texture2D" uid="uid://mff77m7crlqw" path="res://scripts/player/art/ronin.png" id="2_jk1h0"]
+[ext_resource type="Texture2D" uid="uid://bmqwjxk45p5yx" path="res://scripts/player/art/katana-sheet.png" id="3_jk1h0"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_wrpot"]
 atlas = ExtResource("2_jk1h0")
@@ -265,14 +266,182 @@ animations = [{
 "speed": 5.0
 }]
 
+[sub_resource type="Animation" id="Animation_wrpot"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("weapon:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(-0.033333335),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("visual:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("visual:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("weapon:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(1.5010371, 0.03, -0.07)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("weapon:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.2617994, -0.5358161)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("weapon:flip_v")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+
+[sub_resource type="Animation" id="Animation_tyjfs"]
+resource_name = "slash"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("weapon:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.23333333, 0.33333334),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [Vector2i(0, 0), Vector2i(0, 0), Vector2i(1, 0), Vector2i(1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("visual:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(-0.033333335, 0.33333334, 0.56666666),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [0, 2, 3]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("visual:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"slash_d2u"]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("weapon:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0, 0.23490152, 0.36476755, 0.36666667, 0.3666915),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [Vector3(1.5010371, 0.03, -0.07), Vector3(1.5010371, -1.5230029, -0.07), Vector3(1.5010371, 0.007616639, -0.07), Vector3(1.5010371, 0.03, -0.07), Vector3(1.501, 1.1775676, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("weapon:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 0.033333335, 0.36666667),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector3(0, 0.2617994, -0.5358161), Vector3(0, 0.2617994, 0), Vector3(0, 0.2617994, 1.8151424)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("weapon:flip_v")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0.033333335, 0.23333333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [false, true]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_dc70k"]
+_data = {
+&"RESET": SubResource("Animation_wrpot"),
+&"slash_d2u": SubResource("Animation_tyjfs")
+}
+
 [node name="Player" type="Node3D" unique_id=1403872936]
 script = ExtResource("1_7wv2m")
 
 [node name="visual" type="AnimatedSprite3D" parent="." unique_id=552605342]
+pixel_size = 0.1
 texture_filter = 2
 sprite_frames = SubResource("SpriteFrames_bhunq")
-animation = &"stun_lock"
+animation = &"idle"
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2062757244]
-transform = Transform3D(0.9590838, 0, -0.28312236, 0, 1, 0, 0.28312236, 0, 0.9590838, 0.018546239, 0.09119345, 0.47608328)
+transform = Transform3D(0.9590838, 0, -0.28312236, 0, 1, 0, 0.28312236, 0, 0.9590838, 0.17920905, 1.0327357, 4.162036)
 fov = 53.0
+
+[node name="weapon" type="Sprite3D" parent="." unique_id=32670621]
+transform = Transform3D(0.8305535, 0.4931466, 0.258819, -0.5105429, 0.85985225, 0, -0.22254615, -0.13213824, 0.9659257, 1.5010371, 0.03, -0.07)
+flip_v = true
+pixel_size = 0.1
+texture_filter = 0
+texture = ExtResource("3_jk1h0")
+hframes = 2
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1199139627]
+libraries/ = SubResource("AnimationLibrary_dc70k")

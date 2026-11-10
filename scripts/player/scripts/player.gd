@@ -20,18 +20,19 @@ func _ready() -> void:
 	visual.play("idle")
 
 func _action_handler()->void:
-	if Input.is_action_just_pressed("slash"):
-		visual.play(slash_anim_lst.pick_random())
-		if (cur_enemy.state==Enemy.STATE.DOWN):
-			pass
-			
-	if Input.is_action_just_pressed("parry"):
-		visual.play("parry")
-		if (cur_enemy.state==Enemy.STATE.ATTACK):
-			cur_enemy.got_parried()
-		else:
-			visual.play("stun_lock")
-			is_stun=true
+	pass
+	#if Input.is_action_just_pressed("slash"):
+		#visual.play(slash_anim_lst.pick_random())
+		#if (cur_enemy.state==Enemy.STATE.DOWN):
+			#pass
+			#
+	#if Input.is_action_just_pressed("parry"):
+		#visual.play("parry")
+		#if (cur_enemy.state==Enemy.STATE.ATTACK):
+			#cur_enemy.got_parried()
+		#else:
+			#visual.play("stun_lock")
+			#is_stun=true
 		
 		
 

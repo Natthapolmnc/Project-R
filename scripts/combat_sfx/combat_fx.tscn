@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://qioikno7842q"]
+
+[ext_resource type="Script" uid="uid://b3xedrlypbb4" path="res://scripts/combat_sfx/combat_effects.gd" id="1_okkbs"]
+
+[node name="CombatFX" type="Node" unique_id=1476212915]
+script = ExtResource("1_okkbs")
