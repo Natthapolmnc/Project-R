@@ -1,0 +1,29 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://enemy_combat/combat_effects.gd" id="1_effects"]
+[ext_resource type="Script" path="res://enemy_combat/combat_effect_preset.gd" id="2_preset"]
+[ext_resource type="PackedScene" path="res://enemy_combat/example_sparks.tscn" id="3_sparks"]
+
+[sub_resource type="Resource" id="Preset_enemy_slash"]
+script = ExtResource("2_preset")
+id = &"enemy_slash"
+particle_scene = ExtResource("3_sparks")
+cleanup_seconds = 1.5
+shake_strength = 0.08
+shake_duration = 0.18
+flash_color = Color(1, 0.78, 0.57, 0.35)
+flash_duration = 0.12
+
+[sub_resource type="Resource" id="Preset_player_parry"]
+script = ExtResource("2_preset")
+id = &"player_parry"
+particle_scene = ExtResource("3_sparks")
+cleanup_seconds = 1.5
+shake_strength = 0.14
+shake_duration = 0.24
+flash_color = Color(0.66, 0.85, 1, 0.55)
+flash_duration = 0.16
+
+[node name="CombatFX" type="Node"]
+script = ExtResource("1_effects")
+presets = [SubResource("Preset_enemy_slash"), SubResource("Preset_player_parry")]
