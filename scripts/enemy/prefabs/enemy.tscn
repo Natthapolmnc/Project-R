@@ -403,12 +403,17 @@ _data = {
 &"pass": SubResource("Animation_dufno")
 }
 
-[node name="Enemy" type="Node3D" unique_id=1970614869 node_paths=PackedStringArray("animation", "timing_player")]
+[sub_resource type="PlaneMesh" id="PlaneMesh_bhunq"]
+
+[node name="Enemy" type="Node3D" unique_id=1970614869 node_paths=PackedStringArray("timing_player")]
 script = ExtResource("1_1ej27")
 resource = SubResource("Resource_1ej27")
 profile = ExtResource("3_xigy4")
+cur_level = null
 sequence_duration = 4.0
-animation = NodePath("AnimatedSprite3D")
+auto_generate_sequence = null
+manual_sequence = null
+slow_down = null
 timing_player = NodePath("AnimationPlayer")
 
 [node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="." unique_id=385896111]
@@ -419,3 +424,8 @@ animation = &"slash_down2up"
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1020119163]
 libraries/ = SubResource("AnimationLibrary_jhigj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=427131376]
+transform = Transform3D(0.59166807, 0, 0, 0, -4.371139e-08, -0.9369536, 0, 1, -4.095554e-08, 0.4371866, 0, 0)
+visible = false
+mesh = SubResource("PlaneMesh_bhunq")
