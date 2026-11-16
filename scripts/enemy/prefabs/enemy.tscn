@@ -1,10 +1,12 @@
-[gd_scene format=3 uid="uid://ucjsdukdv2fw"]
+[gd_scene format=3 uid="uid://drd61nc480lg"]
 
 [ext_resource type="Script" uid="uid://ruemvvfr76w5" path="res://scripts/enemy/scripts/enemy/enemy_combat/enemy.gd" id="1_1ej27"]
 [ext_resource type="Texture2D" uid="uid://dhhm40xf833pl" path="res://scripts/enemy/art/enemy.png" id="2_dufno"]
 [ext_resource type="Script" uid="uid://cdcp3xypogmnm" path="res://scripts/enemy/scripts/enemy/enemy_combat/character_resource.gd" id="2_xigy4"]
 [ext_resource type="Resource" uid="uid://bbh78i1k5ovhb" path="res://basic_enemy.tres" id="3_xigy4"]
 [ext_resource type="Texture2D" uid="uid://cq7r0h4laxkrl" path="res://scripts/enemy/art/enemy_sword_path-Sheet.png" id="5_dufno"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_bhunq"]
 
 [sub_resource type="Resource" id="Resource_1ej27"]
 script = ExtResource("2_xigy4")

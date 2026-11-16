@@ -8,7 +8,6 @@ script = ExtResource("1_pil0k")
 from_stance = &"up"
 to_stance = &"down"
 animation_name = &"slash_u2d"
-
 sprite_animation = &"slash_up2down"
 metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
