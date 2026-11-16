@@ -1,0 +1,33 @@
+[gd_scene format=3 uid="uid://beltj1ybkw7f6"]
+
+[ext_resource type="Texture2D" uid="uid://ckijnhh1yhi5p" path="res://scripts/enemy/art/project_r_flesh_particle_red.png" id="1_pw52d"]
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_li3k3"]
+particle_flag_align_y = true
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 5.0
+initial_velocity_max = 7.0
+anim_offset_max = 1.0
+sub_emitter_mode = 1
+sub_emitter_frequency = 30.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_prff8"]
+transparency = 1
+albedo_texture = ExtResource("1_pw52d")
+texture_filter = 0
+billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="QuadMesh" id="QuadMesh_pw52d"]
+material = SubResource("StandardMaterial3D_prff8")
+
+[node name="EnemyGore" type="GPUParticles3D" unique_id=1537551376]
+emitting = false
+explosiveness = 1.0
+transform_align = 4
+transform_align_axis = 1
+process_material = SubResource("ParticleProcessMaterial_li3k3")
+draw_pass_1 = SubResource("QuadMesh_pw52d")

@@ -278,7 +278,7 @@ func is_dead() -> bool:
 
 
 func receive_parry() -> bool:
-	CombatFx.trigger("asd",[])
+
 	if not can_be_parried():
 		return false
 	resource.cur_stab = maxi(resource.cur_stab - 1, 0)

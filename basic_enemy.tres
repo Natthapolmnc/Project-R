@@ -7,7 +7,8 @@
 script = ExtResource("1_pil0k")
 from_stance = &"up"
 to_stance = &"down"
-timing_animation = &"pass"
+animation_name = &"slash_u2d"
+
 sprite_animation = &"slash_up2down"
 metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
@@ -16,7 +17,7 @@ script = ExtResource("1_pil0k")
 kind = 1
 from_stance = &"up"
 to_stance = &"down"
-timing_animation = &"pass"
+animation_name = &"trick_u2d"
 sprite_animation = &"trick_up2down"
 metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
@@ -24,7 +25,7 @@ metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 script = ExtResource("1_pil0k")
 from_stance = &"down"
 to_stance = &"up"
-timing_animation = &"pass"
+animation_name = &"slash_d2u"
 sprite_animation = &"slash_down2up"
 metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
@@ -33,7 +34,7 @@ script = ExtResource("1_pil0k")
 kind = 1
 from_stance = &"down"
 to_stance = &"up"
-timing_animation = &"pass"
+animation_name = &"trick_d2u"
 sprite_animation = &"trick_down2up"
 metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
