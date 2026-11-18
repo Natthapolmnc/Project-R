@@ -1,6 +1,27 @@
 [gd_scene format=3 uid="uid://15has6w78yjy"]
 
 [ext_resource type="Script" uid="uid://b3xedrlypbb4" path="res://scripts/combat_sfx/combat_effects.gd" id="1_combat_fx"]
+[ext_resource type="Script" uid="uid://d2xxicnxfqptx" path="res://scripts/combat_sfx/combat_effect_preset.gd" id="2_t48ll"]
+[ext_resource type="PackedScene" uid="uid://beltj1ybkw7f6" path="res://scripts/combat_sfx/particle_scenes/enemy_gore.tscn" id="3_wxvqj"]
+[ext_resource type="PackedScene" uid="uid://csn1mm2vk4yq" path="res://scripts/combat_sfx/particle_scenes/parry_particle.tscn" id="4_wxvqj"]
+
+[sub_resource type="Resource" id="Resource_6uqi0"]
+script = ExtResource("2_t48ll")
+id = &"blood"
+particle_scene = ExtResource("3_wxvqj")
+cleanup_seconds = 1.0
+shake_strength = 0.07
+flash_color = Color(1, 1, 1, 0.72156864)
+metadata/_custom_type_script = "uid://d2xxicnxfqptx"
+
+[sub_resource type="Resource" id="Resource_535ly"]
+script = ExtResource("2_t48ll")
+id = &"parry"
+particle_scene = ExtResource("4_wxvqj")
+cleanup_seconds = 1.0
+shake_duration = 0.0
+metadata/_custom_type_script = "uid://d2xxicnxfqptx"
 
 [node name="CombatFX" type="Node" unique_id=143107392]
 script = ExtResource("1_combat_fx")
+presets = Array[ExtResource("2_t48ll")]([SubResource("Resource_6uqi0"), SubResource("Resource_535ly")])

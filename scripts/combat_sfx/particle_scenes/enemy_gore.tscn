@@ -14,6 +14,7 @@ sub_emitter_frequency = 30.0
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_prff8"]
 transparency = 1
+shading_mode = 0
 albedo_texture = ExtResource("1_pw52d")
 texture_filter = 0
 billboard_mode = 3

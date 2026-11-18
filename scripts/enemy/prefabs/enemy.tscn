@@ -3,12 +3,10 @@
 [ext_resource type="Script" uid="uid://ruemvvfr76w5" path="res://scripts/enemy/scripts/enemy/enemy_combat/enemy.gd" id="1_1ej27"]
 [ext_resource type="Texture2D" uid="uid://dhhm40xf833pl" path="res://scripts/enemy/art/enemy.png" id="2_dufno"]
 [ext_resource type="Script" uid="uid://cdcp3xypogmnm" path="res://scripts/enemy/scripts/enemy/enemy_combat/character_resource.gd" id="2_xigy4"]
-[ext_resource type="Resource" uid="uid://bbh78i1k5ovhb" path="res://basic_enemy.tres" id="3_xigy4"]
+[ext_resource type="Resource" uid="uid://bbh78i1k5ovhb" path="res://scripts/enemy/level/basic_enemy1.tres" id="3_xigy4"]
 [ext_resource type="Texture2D" uid="uid://cq7r0h4laxkrl" path="res://scripts/enemy/art/enemy_sword_path-Sheet.png" id="5_dufno"]
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_bhunq"]
-
-[sub_resource type="Resource" id="Resource_1ej27"]
+[sub_resource type="Resource" id="Resource_2v1pe"]
 script = ExtResource("2_xigy4")
 metadata/_custom_type_script = "uid://cdcp3xypogmnm"
 
@@ -486,7 +484,7 @@ tracks/6/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_bmeyc"]
-length = 0.9
+length = 0.56666666
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -506,7 +504,7 @@ tracks/1/path = NodePath("weapon:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.23333338, 0.4333334, 0.6333333, 0.76666665, 0.9),
+"times": PackedFloat32Array(0, 0.13333337, 0.30000004, 0.39999998, 0.46666667, 0.5666667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector3(-0.013954759, -0.31515366, 0.2294879), Vector3(-0.509, -0.8, 0.229), Vector3(-0.509, -0.8, 0.229), Vector3(-1.269, -2.285, 0.229), Vector3(-1.269, -2.285, 0.114), Vector3(-1.269, -2.38, 0.284)]
@@ -518,7 +516,7 @@ tracks/2/path = NodePath("weapon:rotation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.23333338, 0.4333334, 0.6333333, 0.76666665, 0.9),
+"times": PackedFloat32Array(0, 0.13333337, 0.30000004, 0.39999998, 0.46666667, 0.5666667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(0, 0, 0.06981317), Vector3(0, 0, 0.06981317), Vector3(0, 0, 1.2130039), Vector3(-1.134464, 0, 1.1152654), Vector3(0.80285144, 0, 1.3857914)]
@@ -530,7 +528,7 @@ tracks/3/path = NodePath("weapon:flip_h")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.4, 0.8),
+"times": PackedFloat32Array(0, 0.26666668, 0.5000001),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [false, false, false]
@@ -542,7 +540,7 @@ tracks/4/path = NodePath("visual:frame")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.06666667, 0.16666667, 0.26666668, 0.33333334, 0.4, 0.46666667, 0.53333336, 0.6, 0.6666667, 0.76666665),
+"times": PackedFloat32Array(0, 0.06666667, 0.13333333, 0.16666667, 0.2, 0.26666668, 0.3, 0.33333334, 0.36666667, 0.4, 0.46666667),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11]
@@ -571,9 +569,26 @@ tracks/6/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.9),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [false],
+"method": &"set_clocking"
+}, {
+"args": [true],
+"method": &"set_clocking"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_g6sjl"]
-length = 0.2
+length = 0.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -657,6 +672,23 @@ tracks/6/keys = {
 "transitions": PackedFloat32Array(0.5, 1, 1, 1),
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(-0.2, 0, 0), Vector3(0.2, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [true],
+"method": &"animation_set_attackable"
+}, {
+"args": [false],
+"method": &"animation_set_attackable"
+}]
 }
 
 [sub_resource type="Animation" id="Animation_yyy73"]
@@ -923,7 +955,7 @@ tracks/6/keys = {
 
 [sub_resource type="Animation" id="Animation_6vlkm"]
 resource_name = "slash_d2u"
-length = 0.26666668
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -931,7 +963,7 @@ tracks/0/path = NodePath("weapon:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.16666666),
+"times": PackedFloat32Array(0, 0.3),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [Vector2i(0, 0), Vector2i(1, 0)]
@@ -943,7 +975,7 @@ tracks/1/path = NodePath("weapon:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.13333333, 0.2, 0.26666665),
+"times": PackedFloat32Array(0, 0.26666665, 0.33333334, 0.39999998),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [Vector3(-0.514, -0.765, 0.784), Vector3(0.116, -1.18, 1.039), Vector3(-2, -0.578, 0.358), Vector3(-1.294, 1.645, -0.431)]
@@ -955,7 +987,7 @@ tracks/2/path = NodePath("weapon:rotation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.13333333, 0.26666665),
+"times": PackedFloat32Array(0, 0.26666665, 0.39999998),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
 "values": [Vector3(-0.6021386, 0, -1.9198622), Vector3(-0.6021386, 0, -1.6406095), Vector3(-0.6021386, 0, -4.8694687)]
@@ -979,7 +1011,7 @@ tracks/4/path = NodePath("visual:frame")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.13333333, 0.2, 0.23333333),
+"times": PackedFloat32Array(0, 0.26666665, 0.33333334, 0.36666667),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 3, 5]
@@ -1008,9 +1040,40 @@ tracks/6/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [true],
+"method": &"animation_set_parryable"
+}, {
+"args": [false],
+"method": &"animation_set_parryable"
+}]
+}
+tracks/8/type = "method"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath(".")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0.36666667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"animation_strike"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_wvi7v"]
-length = 0.26666668
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -1018,7 +1081,7 @@ tracks/0/path = NodePath("weapon:frame_coords")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.16666667),
+"times": PackedFloat32Array(0, 0.29999998),
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [Vector2i(0, 0), Vector2i(1, 0)]
@@ -1030,7 +1093,7 @@ tracks/1/path = NodePath("weapon:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.13333336, 0.20000002, 0.26666668),
+"times": PackedFloat32Array(0, 0.26666665, 0.3333333, 0.4),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [Vector3(-0.739, -0.315, 0.229), Vector3(-1.149, 1.33, -0.296), Vector3(-1.16, -0.634, 0.104), Vector3(0.856, -0.685, 0.519)]
@@ -1042,7 +1105,7 @@ tracks/2/path = NodePath("weapon:rotation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.13333336, 0.20000002, 0.26666668),
+"times": PackedFloat32Array(0, 0.26666665, 0.3333333, 0.4),
 "transitions": PackedFloat32Array(1, 1, 1, 1),
 "update": 0,
 "values": [Vector3(0, 0, 0), Vector3(-0.3403392, 0, -0.57595867), Vector3(-0.55457664, 0.07284072, 1.5792695), Vector3(-0.7766715, 0.14835298, 3.8135445)]
@@ -1066,7 +1129,7 @@ tracks/4/path = NodePath("visual:frame")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.03333334, 0.06666667, 0.16666667, 0.23333335, 0.26666668),
+"times": PackedFloat32Array(0, 0.03333334, 0.06666667, 0.29999998, 0.36666664, 0.4),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 4, 5, 6]
@@ -1095,9 +1158,40 @@ tracks/6/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0, 0.4),
+"transitions": PackedFloat32Array(1, 1),
+"values": [{
+"args": [true],
+"method": &"animation_set_parryable"
+}, {
+"args": [false],
+"method": &"animation_set_parryable"
+}]
+}
+tracks/8/type = "method"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath(".")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0.36666667),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"animation_strike"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_6y0ni"]
-length = 0.33333334
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -1117,10 +1211,10 @@ tracks/1/path = NodePath("weapon:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.06666667, 0.0691636, 0.26389992, 0.26666668),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.23333333, 0.23907389),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(-0.514, -0.765, 0.784), Vector3(-0.514, -0.765, 0.784), Vector3(-0.014, -0.84, 1.124), Vector3(-0.014, -0.84, 1.124), Vector3(-1.745, -0.028, 0.358)]
+"values": [Vector3(-0.514, -0.765, 0.524), Vector3(-0.514, -0.765, 0.524), Vector3(-1.745, -0.028, 0.358)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1129,10 +1223,10 @@ tracks/2/path = NodePath("weapon:rotation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.06666667, 0.06916358, 0.26389992, 0.26666668),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.23336102, 0.23907389),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(-0.6021386, 0, -1.9198622), Vector3(-0.6021386, 0, -1.9198622), Vector3(-0.6021386, 0, -1.2566371), Vector3(-0.6021386, 0, -1.2566371), Vector3(-0.6021386, 0, -2.2549653)]
+"values": [Vector3(0, 0, -1.8413223), Vector3(0, 0, -1.8413223), Vector3(-0.6021386, 0, -2.2549653)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -1153,7 +1247,7 @@ tracks/4/path = NodePath("visual:frame")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.26666668, 0.3),
+"times": PackedFloat32Array(0, 0.23333333, 0.30574054),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
 "values": [0, 2, 4]
@@ -1182,9 +1276,23 @@ tracks/6/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.23333333),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"animation_reveal_trick"
+}]
+}
 
 [sub_resource type="Animation" id="Animation_4g7m7"]
-length = 0.33333334
+length = 0.4
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -1204,10 +1312,10 @@ tracks/1/path = NodePath("weapon:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 0.06666667, 0.07168419, 0.26339614, 0.26666665, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.22769727, 0.23333333),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(-0.739, -0.315, 0.229), Vector3(-0.739, -0.315, 0.229), Vector3(-0.994, 1.44, -0.156), Vector3(-0.994, 1.44, -0.156), Vector3(0.126, -0.795, 0.534), Vector3(0.126, -0.795, 0.534)]
+"values": [Vector3(-0.739, -0.315, 0.229), Vector3(-0.739, -0.315, 0.229), Vector3(0.126, -0.795, 0.534)]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -1216,10 +1324,10 @@ tracks/2/path = NodePath("weapon:rotation")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.06666667, 0.07168419, 0.26337448, 0.26666665, 0.3),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.22769727, 0.23333333),
+"transitions": PackedFloat32Array(1, 1, 1),
 "update": 0,
-"values": [Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(-0.3403392, 0, -0.715585), Vector3(-0.3403392, 0, -0.715585), Vector3(-0.15707964, 0, -0.008726646), Vector3(-0.15707964, 0, -0.008726646)]
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0), Vector3(-0.15707964, 0, -0.008726646)]
 }
 tracks/3/type = "value"
 tracks/3/imported = false
@@ -1269,6 +1377,20 @@ tracks/6/keys = {
 "update": 0,
 "values": [Vector3(0, 0, 0)]
 }
+tracks/7/type = "method"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath(".")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0.23333333),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"animation_reveal_trick"
+}]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_jhigj"]
 _data = {
@@ -1284,14 +1406,12 @@ _data = {
 &"trick_u2d": SubResource("Animation_4g7m7")
 }
 
-[node name="Enemy" type="Node3D" unique_id=1970614869 node_paths=PackedStringArray("animation", "timing_player")]
+[sub_resource type="PlaneMesh" id="PlaneMesh_bhunq"]
+
+[node name="Enemy" type="Node3D" unique_id=1970614869]
 script = ExtResource("1_1ej27")
-resource = SubResource("Resource_1ej27")
+resource = SubResource("Resource_2v1pe")
 profile = ExtResource("3_xigy4")
-cur_level = null
-sequence_duration = 4.0
-animation = NodePath("AnimatedSprite3D")
-timing_player = NodePath("AnimationPlayer")
 
 [node name="visual" type="AnimatedSprite3D" parent="." unique_id=385896111]
 pixel_size = 0.1

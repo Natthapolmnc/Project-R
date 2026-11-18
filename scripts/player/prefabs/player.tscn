@@ -399,10 +399,10 @@ tracks/3/path = NodePath("weapon:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.033333335),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(1.606, -0.325, -0.07), Vector3(1.841, -0.325, -0.07)]
+"values": [Vector3(0.666, -0.815, -0.07)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -411,10 +411,10 @@ tracks/4/path = NodePath("weapon:rotation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.06100162, 0.06666666, 0.10000001, 0.13333334, 0.16666667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.033333335, 0.06666667, 0.13333334, 0.16666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector3(0, -0.29670596, 0.79063416), Vector3(0, -0.29670596, -0.108210415), Vector3(0, -0.29670596, 0.52883476), Vector3(0, -0.29670596, 0.12740904), Vector3(0, -0.29670596, 0.43284166), Vector3(0, -0.29670596, 0.79063416)]
+"values": [Vector3(0, 0.2617994, -0.5358161), Vector3(0, 0.2617994, -0.108210415), Vector3(0, 0.2617994, -0.5358161), Vector3(0, 0.2617994, -0.108210415), Vector3(0, 0.2617994, -0.5358161)]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -578,7 +578,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0, 0.06666863, 0.11827599),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [1, 1, 0]
+"values": [1, 3, 4]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -587,10 +587,10 @@ tracks/4/path = NodePath("visual:animation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.06666863),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"slash_u2d", &"slash_l2r"]
+"values": [&"slash_u2d"]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -707,7 +707,7 @@ tracks/6/keys = {
 
 [sub_resource type="Animation" id="Animation_xnbbk"]
 resource_name = "stun_lock"
-length = 0.2
+length = 0.5
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -803,6 +803,9 @@ _data = {
 &"stun_lock": SubResource("Animation_xnbbk")
 }
 
+[sub_resource type="PlaneMesh" id="PlaneMesh_12j5o"]
+orientation = 2
+
 [node name="Player" type="Node3D" unique_id=1403872936]
 script = ExtResource("1_7wv2m")
 
@@ -826,3 +829,8 @@ hframes = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1199139627]
 libraries/ = SubResource("AnimationLibrary_dc70k")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=459371516]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1721561, 0, 0.4135412)
+visible = false
+mesh = SubResource("PlaneMesh_12j5o")
