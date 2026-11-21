@@ -8,7 +8,7 @@ class_name Player
 
 @onready var anim: AnimationPlayer = $AnimationPlayer
 @onready var visual: AnimatedSprite3D = $visual
-@export var idle_anim: StringName = &"RESET"
+@export var idle_anim: StringName = &"idle"
 @export var parry_anim: StringName = &"parry"
 @export var stun_anim: StringName = &"stun_lock"
 @export var slash_anim_lst: Array[String] = [
@@ -20,15 +20,17 @@ class_name Player
 @export var cur_enemy:Enemy
 
 
-var is_stun=false
+var is_stun: bool = false
+var receive_input: bool = true
 
 
 func _ready() -> void:
+	reset_scale()
 	anim.animation_finished.connect(_animation_ending_handler)
 	anim.play(idle_anim)
 
 func _action_handler()->void:
-	if is_stun:
+	if is_stun or not receive_input:
 		return
 	
 	if Input.is_action_just_pressed("slash"):
@@ -67,3 +69,14 @@ func _process(_delta: float) -> void:
 
 func get_fx_panel() -> MeshInstance3D:
 	return player_fx_panel
+
+
+func reset_scale() -> void:
+	visual.scale = Vector3(1, 1, 1)
+
+func squeeze_scale() -> void:
+	var tween: Tween = create_tween()
+	tween.tween_property(visual, "scale", Vector3(0.3, 1, 1), 0.5)
+
+func set_receive_input(value: bool) -> void:
+	receive_input = value

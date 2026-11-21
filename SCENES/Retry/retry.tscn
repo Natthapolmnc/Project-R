@@ -1,0 +1,32 @@
+[gd_scene format=3 uid="uid://dfsiq5og33nm2"]
+
+[ext_resource type="Script" uid="uid://diy7bxjqr2u2g" path="res://SCENES/Retry/retry.gd" id="1_j8tul"]
+
+[node name="Retry" type="CanvasLayer" unique_id=304053437]
+script = ExtResource("1_j8tul")
+metadata/_edit_vertical_guides_ = [576.0]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=543859060]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.14406255, 0.14406255, 0.14406255, 0.18039216)
+
+[node name="Retry" type="Button" parent="." unique_id=1047523691]
+offset_left = 496.0
+offset_top = 225.0
+offset_right = 654.0
+offset_bottom = 256.0
+text = "Retry Current Level"
+
+[node name="MainMenu" type="Button" parent="." unique_id=316338246]
+offset_left = 531.0
+offset_top = 305.0
+offset_right = 627.0
+offset_bottom = 336.0
+text = "Main Menu"
+
+[connection signal="pressed" from="Retry" to="." method="_on_retry_pressed"]
+[connection signal="pressed" from="MainMenu" to="." method="_on_main_menu_pressed"]

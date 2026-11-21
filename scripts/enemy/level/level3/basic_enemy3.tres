@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="EnemyProfile" format=3 uid="uid://ces0gu6yhqjsl"]
+[gd_resource type="Resource" script_class="EnemyProfile" format=3 uid="uid://jb3fua0kukgj"]
 
-[ext_resource type="Script" uid="uid://drxwbarxhjxnc" path="res://scripts/enemy/scripts/enemy/enemy_combat/enemy_move.gd" id="1_hb3eq"]
-[ext_resource type="Script" uid="uid://h5ts02s4ionm" path="res://scripts/enemy/scripts/enemy/enemy_combat/enemy_profile.gd" id="2_ux6cb"]
+[ext_resource type="Script" uid="uid://drxwbarxhjxnc" path="res://scripts/enemy/scripts/enemy/enemy_combat/enemy_move.gd" id="1_h83ew"]
+[ext_resource type="Script" uid="uid://h5ts02s4ionm" path="res://scripts/enemy/scripts/enemy/enemy_combat/enemy_profile.gd" id="2_dwj80"]
 
 [sub_resource type="Resource" id="Resource_riqys"]
-script = ExtResource("1_hb3eq")
+script = ExtResource("1_h83ew")
 from_stance = &"up"
 to_stance = &"down"
 animation_name = &"slash_u2d"
@@ -12,7 +12,7 @@ sprite_animation = &"slash_up2down"
 metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
 [sub_resource type="Resource" id="Resource_sn0t7"]
-script = ExtResource("1_hb3eq")
+script = ExtResource("1_h83ew")
 kind = 1
 from_stance = &"up"
 to_stance = &"down"
@@ -21,7 +21,7 @@ sprite_animation = &"trick_up2down"
 metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
 [sub_resource type="Resource" id="Resource_74fjj"]
-script = ExtResource("1_hb3eq")
+script = ExtResource("1_h83ew")
 from_stance = &"down"
 to_stance = &"up"
 animation_name = &"slash_d2u"
@@ -29,7 +29,7 @@ sprite_animation = &"slash_down2up"
 metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
 [sub_resource type="Resource" id="Resource_cjsy6"]
-script = ExtResource("1_hb3eq")
+script = ExtResource("1_h83ew")
 kind = 1
 from_stance = &"down"
 to_stance = &"up"
@@ -38,12 +38,11 @@ sprite_animation = &"trick_down2up"
 metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
 [resource]
-script = ExtResource("2_ux6cb")
-sequence_pattern = 7
+script = ExtResource("2_dwj80")
 initial_stance = &"down"
 idle_by_stance = Dictionary[StringName, StringName]({
 &"down": &"idle_down",
 &"up": &"idle_up"
 })
-moves = Array[ExtResource("1_hb3eq")]([SubResource("Resource_riqys"), SubResource("Resource_sn0t7"), SubResource("Resource_74fjj"), SubResource("Resource_cjsy6")])
+moves = Array[ExtResource("1_h83ew")]([SubResource("Resource_riqys"), SubResource("Resource_sn0t7"), SubResource("Resource_74fjj"), SubResource("Resource_cjsy6")])
 metadata/_custom_type_script = "uid://h5ts02s4ionm"

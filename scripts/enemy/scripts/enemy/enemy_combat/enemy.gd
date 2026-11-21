@@ -155,7 +155,10 @@ func _process(delta: float) -> void:
 	elapsed_time += step
 	enemy_delta.emit(step)
 
-	if current_time <= 0.0:
+	if current_time <= 0.0 and (
+		not timing_player.current_animation.begins_with("slash")
+		and not timing_player.current_animation.begins_with("down")
+		):
 		_timeout_emitted = true
 		enemy_timeout.emit()
 		return
