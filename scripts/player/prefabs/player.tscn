@@ -353,6 +353,95 @@ tracks/6/keys = {
 "values": [Vector3(0, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_m1afh"]
+resource_name = "idle"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("weapon:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("visual:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [0, 1, 2, 3, 4, 5, 6, 7]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("visual:animation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [&"idle"]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("weapon:position")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.666, -0.815, -0.07)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("weapon:rotation")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0.2617994, -0.5358161)]
+}
+tracks/5/type = "value"
+tracks/5/imported = false
+tracks/5/enabled = true
+tracks/5/path = NodePath("weapon:flip_h")
+tracks/5/interp = 1
+tracks/5/loop_wrap = true
+tracks/5/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/6/type = "value"
+tracks/6/imported = false
+tracks/6/enabled = true
+tracks/6/path = NodePath("visual:position")
+tracks/6/interp = 1
+tracks/6/loop_wrap = true
+tracks/6/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
+
 [sub_resource type="Animation" id="Animation_dc70k"]
 resource_name = "parry"
 length = 0.2
@@ -399,10 +488,10 @@ tracks/3/path = NodePath("weapon:position")
 tracks/3/interp = 1
 tracks/3/loop_wrap = true
 tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.033333335),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 0,
-"values": [Vector3(1.606, -0.325, -0.07), Vector3(1.841, -0.325, -0.07)]
+"values": [Vector3(0.666, -0.815, -0.07)]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -411,10 +500,10 @@ tracks/4/path = NodePath("weapon:rotation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.06100162, 0.06666666, 0.10000001, 0.13333334, 0.16666667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.033333335, 0.06666667, 0.13333334, 0.16666667),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector3(0, -0.29670596, 0.79063416), Vector3(0, -0.29670596, -0.108210415), Vector3(0, -0.29670596, 0.52883476), Vector3(0, -0.29670596, 0.12740904), Vector3(0, -0.29670596, 0.43284166), Vector3(0, -0.29670596, 0.79063416)]
+"values": [Vector3(0, 0.2617994, -0.5358161), Vector3(0, 0.2617994, -0.108210415), Vector3(0, 0.2617994, -0.5358161), Vector3(0, 0.2617994, -0.108210415), Vector3(0, 0.2617994, -0.5358161)]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -578,7 +667,7 @@ tracks/3/keys = {
 "times": PackedFloat32Array(0, 0.06666863, 0.11827599),
 "transitions": PackedFloat32Array(1, 1, 1),
 "update": 1,
-"values": [1, 1, 0]
+"values": [1, 3, 4]
 }
 tracks/4/type = "value"
 tracks/4/imported = false
@@ -587,10 +676,10 @@ tracks/4/path = NodePath("visual:animation")
 tracks/4/interp = 1
 tracks/4/loop_wrap = true
 tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.06666863),
-"transitions": PackedFloat32Array(1, 1),
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [&"slash_u2d", &"slash_l2r"]
+"values": [&"slash_u2d"]
 }
 tracks/5/type = "value"
 tracks/5/imported = false
@@ -707,7 +796,6 @@ tracks/6/keys = {
 
 [sub_resource type="Animation" id="Animation_xnbbk"]
 resource_name = "stun_lock"
-length = 0.2
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -796,12 +884,16 @@ tracks/6/keys = {
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_dc70k"]
 _data = {
 &"RESET": SubResource("Animation_wrpot"),
+&"idle": SubResource("Animation_m1afh"),
 &"parry": SubResource("Animation_dc70k"),
 &"slash_d2u": SubResource("Animation_tyjfs"),
 &"slash_l2r": SubResource("Animation_jk1h0"),
 &"slash_u2d": SubResource("Animation_hh0fu"),
 &"stun_lock": SubResource("Animation_xnbbk")
 }
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_12j5o"]
+orientation = 2
 
 [node name="Player" type="Node3D" unique_id=1403872936]
 script = ExtResource("1_7wv2m")
@@ -826,3 +918,8 @@ hframes = 2
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=1199139627]
 libraries/ = SubResource("AnimationLibrary_dc70k")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=459371516]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.1721561, 0, 0.4135412)
+visible = false
+mesh = SubResource("PlaneMesh_12j5o")

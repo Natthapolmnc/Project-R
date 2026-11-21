@@ -1,12 +1,14 @@
 class_name Enemy
 extends Node3D
 
+signal enemy_delta(delta: float)
 signal enemy_timeout
 signal state_changed(new_state: State)
 signal vulnerability_changed(attackable: bool, parryable: bool)
 signal action_started(move: EnemyMove)
 signal strike_reached(move: EnemyMove)
 signal trick_revealed(move: EnemyMove)
+signal enemy_is_finished
 signal enemy_died
 
 
@@ -28,9 +30,7 @@ enum State { PASSIVE, ATTACK, DOWN }
 @export_category("Time Manager")
 @export_range(0.05, 1.0, 0.05) var slow_down: float = 0.5
 
-@export_category("Animation")
-## The sole controller for idle, attack, trick, down and death animations.
-@export var timing_player: AnimationPlayer
+var timing_player: AnimationPlayer
 
 @export_category("Effects")
 ## Optional Marker3D where this enemy's particles should originate.
@@ -55,7 +55,17 @@ var _dead: bool = false
 var _timeout_emitted: bool = false
 
 
+#func _init(prof: EnemyProfile, duration: float) -> void:
+	#sequence_duration = duration
+	#profile = prof
+
+
 func _ready() -> void:
+	for i in get_children():
+		if i is AnimationPlayer:
+			timing_player = i
+			break
+	
 	if profile == null or timing_player == null:
 		push_error("Enemy needs an EnemyProfile and AnimationPlayer")
 		set_process(false)
@@ -98,7 +108,6 @@ func start_sequence(duration: float = -1.0) -> void:
 	else:
 		active_pattern = "manual"
 		entries = manual_sequence.duplicate()
-
 	_load_timeline(entries)
 	_play_idle()
 
@@ -144,8 +153,12 @@ func _process(delta: float) -> void:
 	var step: float = delta if clocking else delta * slow_down
 	current_time = maxf(current_time - step, 0.0)
 	elapsed_time += step
+	enemy_delta.emit(step)
 
-	if current_time <= 0.0:
+	if current_time <= 0.0 and (
+		not timing_player.current_animation.begins_with("slash")
+		and not timing_player.current_animation.begins_with("down")
+		):
 		_timeout_emitted = true
 		enemy_timeout.emit()
 		return
@@ -176,6 +189,8 @@ func _start_move(code: String) -> bool:
 	current_move = move
 	_set_windows(false, false)
 	_set_state(State.ATTACK)
+	if move.kind == EnemyMove.Kind.TRICK:
+		_set_state(State.PASSIVE)
 	timing_player.play(animation_name)
 	action_started.emit(move)
 	return true
@@ -189,7 +204,6 @@ func _on_animation_finished(_animation_name: StringName) -> void:
 		return
 	if current_move == null:
 		return
-
 	var completed_move: EnemyMove = current_move
 	timing_player.stop()
 	current_move = null
@@ -291,15 +305,16 @@ func receive_parry() -> bool:
 	return true
 
 
-func got_parried() -> void:
-	# Compatibility with the previous Enemy API.
-	receive_parry()
+#func got_parried() -> void:
+	## Compatibility with the previous Enemy API.
+	#receive_parry()
 
 
 func receive_hit() -> bool:
 	if not can_be_attacked():
 		return false
 	resource.on_being_finished()
+	enemy_is_finished.emit()
 	if resource.is_dead():
 		_die()
 	return true
@@ -328,6 +343,10 @@ func _die() -> void:
 	_dead = true
 	if profile.death_animation != &"" and timing_player.has_animation(profile.death_animation):
 		timing_player.play(profile.death_animation)
+	timing_player.animation_finished.connect(dead_anim_finished, CONNECT_ONE_SHOT)
+
+
+func dead_anim_finished(_arg = null) -> void:
 	enemy_died.emit()
 
 
@@ -369,5 +388,9 @@ func is_clocking() -> bool:
 	return clocking
 
 
-func _duration_receive(duration: float) -> void:
-	start_sequence(duration)
+func set_duration(duration: float) -> void:
+	sequence_duration = duration
+
+
+func set_profile(prof: EnemyProfile) -> void:
+	profile = prof

@@ -11,13 +11,14 @@ config_version=5
 [application]
 
 config/name="20-sec-ronin"
-run/main_scene="uid://dpnmcpdtawhya"
+run/main_scene="uid://c478xfuoxr71i"
 config/features=PackedStringArray("4.7", "Forward Plus")
 config/icon="res://icon.svg"
 
 [autoload]
 
 CombatFx="*res://scripts/combat_sfx/combat_fx.tscn"
+SceneManager="*uid://u6yjwteo3vig"
 
 [display]
 

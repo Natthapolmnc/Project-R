@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://ba8tv2usapxaj"]
+
+[ext_resource type="Script" uid="uid://npdctvopjpab" path="res://SCENES/setting/setting.gd" id="1_2r66t"]
+[ext_resource type="Script" uid="uid://dlscmjjcxa5if" path="res://SCENES/setting/keybind_button.gd" id="2_n5x7k"]
+
+[node name="Setting" type="Node2D" unique_id=2000945032]
+script = ExtResource("1_2r66t")
+
+[node name="Back" type="Button" parent="." unique_id=1641708725]
+offset_left = 34.0
+offset_top = 571.0
+offset_right = 140.0
+offset_bottom = 622.0
+text = "back"
+
+[node name="PanelContainer" type="PanelContainer" parent="." unique_id=310235461]
+offset_left = 422.0
+offset_top = 199.0
+offset_right = 700.0
+offset_bottom = 309.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PanelContainer" unique_id=341241290]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=759385599]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Slash" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=433354081]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+text = "Slash"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SlashKey" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=856198509]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+script = ExtResource("2_n5x7k")
+action_name = "slash"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=1320736587]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Parry" type="Label" parent="PanelContainer/VBoxContainer/HBoxContainer2" unique_id=1227357418]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+text = "Parry"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ParryKey" type="Button" parent="PanelContainer/VBoxContainer/HBoxContainer2" unique_id=883264794]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 5
+script = ExtResource("2_n5x7k")
+action_name = "parry"
+
+[connection signal="pressed" from="Back" to="." method="on_back_button_pressed"]

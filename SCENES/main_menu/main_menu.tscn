@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://c478xfuoxr71i"]
+
+[ext_resource type="Script" uid="uid://deta5qxynpknq" path="res://SCENES/main_menu/input_manager.gd" id="1_oofpe"]
+
+[node name="MainMenu" type="Node2D" unique_id=1536542491]
+
+[node name="PlayButton" type="Button" parent="." unique_id=909885171]
+offset_left = 543.0
+offset_top = 260.0
+offset_right = 584.0
+offset_bottom = 300.0
+text = "Play"
+
+[node name="InputManager" type="Node" parent="." unique_id=19948361]
+script = ExtResource("1_oofpe")
+
+[node name="SettingButton" type="Button" parent="." unique_id=1245397547]
+offset_left = 498.0
+offset_top = 317.0
+offset_right = 626.0
+offset_bottom = 360.0
+text = "Setting"
+
+[connection signal="pressed" from="PlayButton" to="InputManager" method="_on_play_button_pressed"]
+[connection signal="pressed" from="SettingButton" to="InputManager" method="_on_setting_button_pressed"]

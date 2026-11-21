@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://dpnmcpdtawhya"]
+
+[ext_resource type="PackedScene" uid="uid://drd61nc480lg" path="res://scripts/enemy/prefabs/enemy.tscn" id="1_i3vxn"]
+[ext_resource type="PackedScene" uid="uid://cuf3qkjpb5nuo" path="res://scripts/player/prefabs/player.tscn" id="2_jsldp"]
+[ext_resource type="Script" uid="uid://bny4ae6x41aaa" path="res://SCENES/main_scene_manager.gd" id="3_jsldp"]
+[ext_resource type="PackedScene" uid="uid://dfsiq5og33nm2" path="res://SCENES/Retry/retry.tscn" id="4_0u8pi"]
+[ext_resource type="PackedScene" uid="uid://b8d1wmkd6heky" path="res://SCENES/win/win.tscn" id="5_0u8pi"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_12j5o"]
+orientation = 2
+
+[sub_resource type="GDScript" id="GDScript_6uqi0"]
+script/source = "extends Node
+
+
+func get_random_point() -> Vector3:
+	var size: Vector2 = self.mesh.size
+
+	var local_point := Vector3(
+	randf_range(-size.x / 2.0, size.x / 2.0),
+	0.0,
+	randf_range(-size.y / 2.0, size.y / 2.0)
+	)
+
+	return local_point
+"
+
+[node name="main" type="Node3D" unique_id=1272061223]
+
+[node name="enemy_spawner" type="Marker3D" parent="." unique_id=626950176]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7803288, 0.120156765, -2.6727495)
+
+[node name="Enemy" parent="enemy_spawner" unique_id=1970614869 instance=ExtResource("1_i3vxn")]
+visible = false
+
+[node name="player_spawner" type="Marker3D" parent="." unique_id=571875521]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.66288674, 0, 0)
+
+[node name="Player" parent="player_spawner" unique_id=1403872936 instance=ExtResource("2_jsldp")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0017477274, 0, 0.00034439564)
+
+[node name="MainSceneManager" type="Node3D" parent="." unique_id=1949924447]
+script = ExtResource("3_jsldp")
+
+[node name="FxPanel" type="MeshInstance3D" parent="." unique_id=1768432536]
+transform = Transform3D(0.8963122, 0, 0, 0, 1, 0, 0, 0, 1, 1.585454, 0.14648724, -1.7117058)
+visible = false
+mesh = SubResource("PlaneMesh_12j5o")
+script = SubResource("GDScript_6uqi0")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=977703062]
+transform = Transform3D(0.9662311, -0.05045707, -0.2526887, -0.011369087, 0.9713381, -0.23743069, 0.25742623, 0.23228574, 0.9379634, 0.5541668, 1.9559035, 1.7300897)
+
+[node name="Retry" parent="." unique_id=304053437 instance=ExtResource("4_0u8pi")]
+
+[node name="Win" parent="." unique_id=1149770935 instance=ExtResource("5_0u8pi")]
