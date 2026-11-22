@@ -1,10 +1,55 @@
 [gd_scene format=3 uid="uid://dpnmcpdtawhya"]
 
+[ext_resource type="Shader" uid="uid://df62cnn6vw40b" path="res://SCENES/pixelated_sky.gdshader" id="1_ceyew"]
 [ext_resource type="PackedScene" uid="uid://drd61nc480lg" path="res://scripts/enemy/prefabs/enemy.tscn" id="1_i3vxn"]
 [ext_resource type="PackedScene" uid="uid://cuf3qkjpb5nuo" path="res://scripts/player/prefabs/player.tscn" id="2_jsldp"]
 [ext_resource type="Script" uid="uid://bny4ae6x41aaa" path="res://SCENES/main_scene_manager.gd" id="3_jsldp"]
 [ext_resource type="PackedScene" uid="uid://dfsiq5og33nm2" path="res://SCENES/Retry/retry.tscn" id="4_0u8pi"]
 [ext_resource type="PackedScene" uid="uid://b8d1wmkd6heky" path="res://SCENES/win/win.tscn" id="5_0u8pi"]
+[ext_resource type="ArrayMesh" uid="uid://dhsdecsenwkmo" path="res://SCENES/assets/bg/bg_texture.tres" id="6_ys6xq"]
+[ext_resource type="Texture2D" uid="uid://dwtlcrt3whv2j" path="res://SCENES/assets/bg/util/brush.png" id="7_ab6ae"]
+[ext_resource type="Texture2D" uid="uid://dtkfc7xjhbmaj" path="res://SCENES/assets/bg/util/house1.png" id="8_ceyew"]
+[ext_resource type="Texture2D" uid="uid://ddw0lbi5p5ki4" path="res://SCENES/assets/bg/bg_bg_texture.png" id="8_o4jo6"]
+[ext_resource type="Texture2D" uid="uid://cgsvo7trkcug1" path="res://SCENES/assets/bg/util/house2.png" id="9_o4jo6"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_ceyew"]
+shader = ExtResource("1_ceyew")
+shader_parameter/sky_top = Color(1, 1, 1, 1)
+shader_parameter/sky_horizon = Color(0.7518422, 0.82295346, 0.82290506, 1)
+shader_parameter/gradient_height = 0.90400003968012
+shader_parameter/color_steps = 9.6590003638025
+shader_parameter/cloud_light = Color(1, 1, 1, 1)
+shader_parameter/cloud_shadow = Color(1, 1, 1, 1)
+shader_parameter/cloud_scale = 2.0070000715825
+shader_parameter/cloud_coverage = 0.510000024225
+shader_parameter/cloud_detail = 0.3
+shader_parameter/pixel_resolution = 98.68800392768
+shader_parameter/cloud_speed = 0.0
+shader_parameter/cloud_horizon_start = -0.5979999809050001
+shader_parameter/cloud_horizon_end = 0.22700005828250003
+shader_parameter/horizon_fade_steps = 5.0
+
+[sub_resource type="Sky" id="Sky_ab6ae"]
+sky_material = SubResource("ShaderMaterial_ceyew")
+
+[sub_resource type="Environment" id="Environment_o4jo6"]
+background_mode = 2
+background_energy_multiplier = 0.97
+sky = SubResource("Sky_ab6ae")
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_energy = 2.15
+reflected_light_source = 2
+tonemap_mode = 2
+tonemap_agx_white = 15.54
+glow_enabled = true
+glow_levels/1 = 0.75
+glow_levels/3 = 0.72
+glow_blend_mode = 4
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.005
+volumetric_fog_albedo = Color(0.5325496, 0.6258575, 0.6489726, 1)
+volumetric_fog_emission = Color(0.22670749, 0.22670749, 0.22670746, 1)
+volumetric_fog_emission_energy = 1.6
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_12j5o"]
 orientation = 2
@@ -25,13 +70,33 @@ func get_random_point() -> Vector3:
 	return local_point
 "
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dtswy"]
+shading_mode = 2
+diffuse_mode = 1
+specular_mode = 1
+albedo_texture = ExtResource("8_o4jo6")
+
 [node name="main" type="Node3D" unique_id=1272061223]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=2032095186]
+transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
+light_color = Color(1, 0.8901961, 0.7294118, 1)
+light_energy = 0.737
+light_indirect_energy = 1.029
+light_volumetric_fog_energy = 1.028
+light_specular = 2.124
+shadow_enabled = true
+shadow_bias = 0.901
+shadow_normal_bias = 1.461
+shadow_opacity = 0.55
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1603367001]
+environment = SubResource("Environment_o4jo6")
 
 [node name="enemy_spawner" type="Marker3D" parent="." unique_id=626950176]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.7803288, 0.120156765, -2.6727495)
 
 [node name="Enemy" parent="enemy_spawner" unique_id=1970614869 instance=ExtResource("1_i3vxn")]
-visible = false
 
 [node name="player_spawner" type="Marker3D" parent="." unique_id=571875521]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.66288674, 0, 0)
@@ -41,6 +106,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0017477274, 0, 0.000344395
 
 [node name="MainSceneManager" type="Node3D" parent="." unique_id=1949924447]
 script = ExtResource("3_jsldp")
+min_turn_angle = 30.0
+max_turn_angle = 125.0
+turn_duration = 0.5
 
 [node name="FxPanel" type="MeshInstance3D" parent="." unique_id=1768432536]
 transform = Transform3D(0.8963122, 0, 0, 0, 1, 0, 0, 0, 1, 1.585454, 0.14648724, -1.7117058)
@@ -54,3 +122,61 @@ transform = Transform3D(0.9662311, -0.05045707, -0.2526887, -0.011369087, 0.9713
 [node name="Retry" parent="." unique_id=304053437 instance=ExtResource("4_0u8pi")]
 
 [node name="Win" parent="." unique_id=1149770935 instance=ExtResource("5_0u8pi")]
+
+[node name="BgTexture" type="MeshInstance3D" parent="." unique_id=1148721965]
+transform = Transform3D(-3.932844e-06, 0, -69.6681, 0, 69.66811, 0, 89.972984, 0, -3.0452898e-06, 1.3579695, -2.4515905, -1.2130437)
+mesh = ExtResource("6_ys6xq")
+surface_material_override/0 = SubResource("StandardMaterial3D_dtswy")
+
+[node name="brush" type="Sprite3D" parent="BgTexture" unique_id=853477576]
+transform = Transform3D(0.17997667, 0, -8.881784e-16, 0, 0.18907703, 0, -1.7763568e-15, 0, 0.28332585, -0.08953704, 0.060526486, 0.20186652)
+billboard = 2
+shaded = true
+texture_filter = 0
+texture = ExtResource("7_ab6ae")
+
+[node name="brush2" type="Sprite3D" parent="BgTexture" unique_id=1947041520]
+transform = Transform3D(0.17997667, 0, 0, 0, 0.18907703, 0, -8.881784e-16, 0, 0.28332585, -0.009962291, 0.06052649, -0.189879)
+billboard = 2
+shaded = true
+texture_filter = 0
+texture = ExtResource("7_ab6ae")
+
+[node name="brush3" type="Sprite3D" parent="BgTexture" unique_id=584062700]
+transform = Transform3D(0.17997667, 0, 0, 0, 0.18907703, 0, -8.881784e-16, 0, 0.28332585, -0.030668292, 0.06052649, 0.21920721)
+billboard = 2
+shaded = true
+texture_filter = 0
+texture = ExtResource("7_ab6ae")
+
+[node name="house1" type="Sprite3D" parent="BgTexture" unique_id=993806189]
+transform = Transform3D(0.016021082, 0, -0.06077728, 0, 0.06285348, 0, 0.060777295, 0, 0.016021084, -0.20164216, 0.07594557, 0.10541915)
+shaded = true
+texture_filter = 0
+texture = ExtResource("8_ceyew")
+
+[node name="house2" type="Sprite3D" parent="BgTexture" unique_id=812814023]
+transform = Transform3D(0.02562587, 0, 0.053778697, 0, 0.059572104, 0, -0.053778697, 0, 0.02562587, -0.15874115, 0.08386023, -0.16042061)
+shaded = true
+texture_filter = 0
+texture = ExtResource("9_o4jo6")
+
+[node name="house3" type="Sprite3D" parent="BgTexture" unique_id=251161509]
+transform = Transform3D(-0.020091748, 0, 0.089765556, 0, 0.091986634, 0, -0.08976555, 0, -0.020091753, 0.24925657, 0.13547753, -0.25811693)
+flip_h = true
+shaded = true
+texture_filter = 0
+texture = ExtResource("9_o4jo6")
+
+[node name="house5" type="Sprite3D" parent="BgTexture" unique_id=172636140]
+transform = Transform3D(-5.4481203e-05, 0, 0.086950175, 0, 0.08695019, 0, -0.086950175, 0, -5.4487613e-05, 0.39694655, 0.1291049, -0.035991497)
+flip_h = true
+shaded = true
+texture_filter = 0
+texture = ExtResource("9_o4jo6")
+
+[node name="house4" type="Sprite3D" parent="BgTexture" unique_id=215883357]
+transform = Transform3D(0.043544136, 0, 0.101871036, 0, 0.11078728, 0, -0.101871036, 0, 0.043544102, 0.2847067, 0.16337904, 0.31896424)
+shaded = true
+texture_filter = 0
+texture = ExtResource("9_o4jo6")

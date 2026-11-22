@@ -1505,6 +1505,8 @@ profile = ExtResource("3_xigy4")
 slow_down = 0.65
 
 [node name="visual" type="AnimatedSprite3D" parent="." unique_id=385896111]
+cast_shadow = 2
+gi_mode = 2
 pixel_size = 0.1
 texture_filter = 0
 sprite_frames = SubResource("SpriteFrames_bhunq")
@@ -1512,6 +1514,8 @@ animation = &"trick_up2down"
 
 [node name="weapon" type="Sprite3D" parent="." unique_id=1899278432]
 transform = Transform3D(-0.26723832, 0.9636305, 0, -0.9636305, -0.26723832, 0, 0, 0, 1, -0.514, -0.765, 0.524)
+cast_shadow = 2
+gi_mode = 2
 offset = Vector2(-3.45, 11.03)
 pixel_size = 0.1
 texture_filter = 0

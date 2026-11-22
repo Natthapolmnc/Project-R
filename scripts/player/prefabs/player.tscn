@@ -899,6 +899,8 @@ orientation = 2
 script = ExtResource("1_7wv2m")
 
 [node name="visual" type="AnimatedSprite3D" parent="." unique_id=552605342]
+cast_shadow = 2
+gi_mode = 2
 pixel_size = 0.1
 texture_filter = 2
 sprite_frames = SubResource("SpriteFrames_bhunq")
@@ -910,6 +912,8 @@ fov = 53.0
 
 [node name="weapon" type="Sprite3D" parent="." unique_id=32670621]
 transform = Transform3D(0.8305535, 0.4931466, 0.25881895, -0.5105429, 0.85985225, 0, -0.22254615, -0.13213824, 0.9659255, 0.666, -0.815, -0.07)
+cast_shadow = 2
+gi_mode = 2
 offset = Vector2(1.705, 11.525)
 pixel_size = 0.1
 texture_filter = 0
