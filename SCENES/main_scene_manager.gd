@@ -4,9 +4,10 @@ extends Node
 # ------ Node ------
 @onready var player: Player = $"../player_spawner/Player"
 @onready var enemy_spawner: Marker3D = $"../enemy_spawner"
-@onready var clock: Label3D = $"../Label3D"
+@onready var clock: Label = $"../Label"
 @onready var retry: CanvasLayer = $"../Retry"
 @onready var win: CanvasLayer = $"../Win"
+@onready var tutorial: CanvasLayer = $"../Tutorial"
 
 
 # ------ 20 Secs Counter ------
@@ -27,9 +28,11 @@ var generated_time: Array[float] = []
 
 
 # Engine.set_time_scale(0)
-var first_parry_fail: bool = false
-var first_slash_fail: bool = false
-var first_parry_success: bool = false
+var first_parry: bool = true
+var first_slash: bool = true
+var first_timeout: bool = true
+var action_tutorial_done: bool = false
+var tutorial_done: bool = false
 
 
 ## Called when the node enters the scene tree for the first time.
@@ -75,7 +78,9 @@ func load_level_profiles() -> void:
 
 
 func level_initialization(advance: bool) -> void:
+	player.is_dead = false
 	player.reset_scale()
+	player.anim.play(player.idle_anim)
 	if advance:
 		cur_level += 1
 	
@@ -106,6 +111,12 @@ func spawn_enemy() -> void:
 	cur_enemy.enemy_died.connect(on_enemy_died)
 	
 	display_enemy()
+	
+	if not tutorial_done:
+		if not action_tutorial_done:
+			cur_enemy.state_changed.connect(on_first_parry)
+			cur_enemy.state_changed.connect(on_first_slash)
+		cur_enemy.enemy_timeout.connect(on_enemy_timeout)
 
 
 func display_enemy() -> void:
@@ -170,7 +181,7 @@ func time_tick(delta: float) -> void:
 # ==============================
 func game_over(_arg = null) -> void:
 	CombatFx.trigger("blood", player.get_fx_panel())
-	player.squeeze_scale()
+	player.on_dead()
 	
 	retry.visible = true
 	
@@ -180,3 +191,55 @@ func game_over(_arg = null) -> void:
 func victory() -> void:
 	win.visible = true
 	player.set_receive_input(false)
+
+
+# ==============================
+# TUTORIAL
+# ==============================
+func on_first_parry(state: Enemy.State) -> void:
+	if not state == Enemy.State.ATTACK:
+		return
+	if player.is_stun:
+		player.is_stun = false
+	tutorial.visible = true
+	tutorial.first_parry.visible = true
+	player.parrying.connect(on_first_parry_success, CONNECT_ONE_SHOT)
+	Engine.set_time_scale(1e-6)
+
+func on_first_parry_success() -> void:
+	if not cur_enemy.can_be_parried():
+		print(cur_enemy.can_be_parried())
+		return
+	Engine.set_time_scale(1)
+	first_parry = false
+	tutorial.visible = false
+	tutorial.first_parry.visible = false
+
+
+func on_first_slash(state: Enemy.State) -> void:
+	if not state == Enemy.State.DOWN:
+		return
+	tutorial.visible = true
+	tutorial.first_slash.visible = true
+	player.slashing.connect(on_first_slash_success, CONNECT_ONE_SHOT)
+	Engine.set_time_scale(1e-6)
+
+func on_first_slash_success() -> void:
+	if not cur_enemy.state == Enemy.State.DOWN:
+		return
+	Engine.set_time_scale(1)
+	first_slash = false
+	tutorial.visible = false
+	tutorial.first_slash.visible = false
+	action_tutorial_done = true
+
+func on_enemy_timeout() -> void:
+	first_timeout = false
+	tutorial.visible = true
+	tutorial.first_timeout.visible = true
+	var tween: Tween = get_tree().create_tween()
+	Engine.set_time_scale(0.2)
+	tween.tween_property(Engine, "time_scale", 1, 3)
+	await tween.finished
+	tutorial.visible = false
+	tutorial_done = true

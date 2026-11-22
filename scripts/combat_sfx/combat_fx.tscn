@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://d2xxicnxfqptx" path="res://scripts/combat_sfx/combat_effect_preset.gd" id="2_t48ll"]
 [ext_resource type="PackedScene" uid="uid://beltj1ybkw7f6" path="res://scripts/combat_sfx/particle_scenes/enemy_gore.tscn" id="3_wxvqj"]
 [ext_resource type="PackedScene" uid="uid://csn1mm2vk4yq" path="res://scripts/combat_sfx/particle_scenes/parry_particle.tscn" id="4_wxvqj"]
+[ext_resource type="PackedScene" uid="uid://24hc40g3ve6w" path="res://scripts/combat_sfx/particle_scenes/spark_particle.tscn" id="5_573g4"]
 
 [sub_resource type="Resource" id="Resource_6uqi0"]
 script = ExtResource("2_t48ll")
@@ -22,6 +23,21 @@ cleanup_seconds = 1.0
 shake_duration = 0.0
 metadata/_custom_type_script = "uid://d2xxicnxfqptx"
 
+[sub_resource type="Resource" id="Resource_dufno"]
+script = ExtResource("2_t48ll")
+id = &"timeout"
+flash_color = Color(0, 0, 0, 0.5411765)
+flash_duration = 0.7
+metadata/_custom_type_script = "uid://d2xxicnxfqptx"
+
+[sub_resource type="Resource" id="Resource_2n8uo"]
+script = ExtResource("2_t48ll")
+id = &"spark"
+particle_scene = ExtResource("5_573g4")
+cleanup_seconds = 1.0
+flash_color = Color(1, 1, 1, 0.15294118)
+metadata/_custom_type_script = "uid://d2xxicnxfqptx"
+
 [node name="CombatFX" type="Node" unique_id=143107392]
 script = ExtResource("1_combat_fx")
-presets = Array[ExtResource("2_t48ll")]([SubResource("Resource_6uqi0"), SubResource("Resource_535ly")])
+presets = Array[ExtResource("2_t48ll")]([SubResource("Resource_6uqi0"), SubResource("Resource_535ly"), SubResource("Resource_dufno"), SubResource("Resource_2n8uo")])

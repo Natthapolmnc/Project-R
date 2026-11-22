@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://di5ixbovfa6af"]
+
+[ext_resource type="Script" uid="uid://3mjko8t8aqgs" path="res://audio/audio_player.gd" id="1_j1c7k"]
+[ext_resource type="AudioStream" uid="uid://dn827tebay7gt" path="res://audio/parry_success.wav" id="2_7uism"]
+[ext_resource type="AudioStream" uid="uid://bsrko7xi5mgkj" path="res://audio/parry.wav" id="3_eisda"]
+[ext_resource type="AudioStream" uid="uid://cu8nhj504o7yl" path="res://audio/slash.wav" id="4_2a6oq"]
+[ext_resource type="AudioStream" uid="uid://ddcxypnhh1s7n" path="res://audio/slash2.wav" id="5_i7ouy"]
+[ext_resource type="AudioStream" uid="uid://bm2hv0icnph0a" path="res://audio/slash_fail.wav" id="6_4x17b"]
+
+[node name="AudioPlayer" type="Node3D" unique_id=844876209]
+script = ExtResource("1_j1c7k")
+
+[node name="ParrySuccess" type="AudioStreamPlayer" parent="." unique_id=1826969370]
+stream = ExtResource("2_7uism")
+bus = &"SFX"
+
+[node name="Parry" type="AudioStreamPlayer" parent="." unique_id=1227495928]
+stream = ExtResource("3_eisda")
+bus = &"SFX"
+
+[node name="Slash" type="AudioStreamPlayer" parent="." unique_id=334587582]
+stream = ExtResource("4_2a6oq")
+bus = &"SFX"
+
+[node name="Slash2" type="AudioStreamPlayer" parent="." unique_id=1888322632]
+stream = ExtResource("5_i7ouy")
+bus = &"SFX"
+
+[node name="Slash_fail" type="AudioStreamPlayer" parent="." unique_id=177170005]
+stream = ExtResource("6_4x17b")
+bus = &"SFX"

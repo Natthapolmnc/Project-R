@@ -1,25 +1,50 @@
 [gd_scene format=3 uid="uid://c478xfuoxr71i"]
 
 [ext_resource type="Script" uid="uid://deta5qxynpknq" path="res://SCENES/main_menu/input_manager.gd" id="1_oofpe"]
+[ext_resource type="Texture2D" uid="uid://cnj0ninjrig4r" path="res://SCENES/sprite/project_r_UI_box.png" id="2_4ya1h"]
 
 [node name="MainMenu" type="Node2D" unique_id=1536542491]
 
-[node name="PlayButton" type="Button" parent="." unique_id=909885171]
-offset_left = 543.0
-offset_top = 260.0
-offset_right = 584.0
-offset_bottom = 300.0
-text = "Play"
+[node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=1542688592]
+offset_right = 1152.0
+offset_bottom = 648.0
+texture = ExtResource("2_4ya1h")
+region_rect = Rect2(0, 0, 48, 48)
+patch_margin_left = 23
+patch_margin_top = 23
+patch_margin_right = 23
+patch_margin_bottom = 23
 
 [node name="InputManager" type="Node" parent="." unique_id=19948361]
 script = ExtResource("1_oofpe")
 
 [node name="SettingButton" type="Button" parent="." unique_id=1245397547]
-offset_left = 498.0
-offset_top = 317.0
-offset_right = 626.0
-offset_bottom = 360.0
+custom_minimum_size = Vector2(200, 0)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 472.0
+offset_top = 448.0
+offset_right = 680.0
+offset_bottom = 480.5
+grow_horizontal = 2
+grow_vertical = 2
 text = "Setting"
 
-[connection signal="pressed" from="PlayButton" to="InputManager" method="_on_play_button_pressed"]
+[node name="PlayButton" type="Button" parent="." unique_id=909885171]
+custom_minimum_size = Vector2(200, 0)
+anchors_preset = -1
+anchor_left = 0.062000003
+anchor_top = 0.143
+anchor_right = 0.93700004
+anchor_bottom = 0.85700005
+offset_left = 472.0
+offset_top = 400.0
+offset_right = 680.0
+offset_bottom = 432.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Play"
+
 [connection signal="pressed" from="SettingButton" to="InputManager" method="_on_setting_button_pressed"]
+[connection signal="pressed" from="PlayButton" to="InputManager" method="_on_play_button_pressed"]
