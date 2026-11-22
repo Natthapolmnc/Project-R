@@ -50,6 +50,7 @@ volumetric_fog_density = 0.005
 volumetric_fog_albedo = Color(0.5325496, 0.6258575, 0.6489726, 1)
 volumetric_fog_emission = Color(0.22670749, 0.22670749, 0.22670746, 1)
 volumetric_fog_emission_energy = 1.6
+[ext_resource type="PackedScene" uid="uid://ijfubmhn65vv" path="res://SCENES/tutorial.tscn" id="6_ys6xq"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_12j5o"]
 orientation = 2
@@ -116,10 +117,25 @@ visible = false
 mesh = SubResource("PlaneMesh_12j5o")
 script = SubResource("GDScript_6uqi0")
 
-[node name="Label3D" type="Label3D" parent="." unique_id=977703062]
-transform = Transform3D(0.9662311, -0.05045707, -0.2526887, -0.011369087, 0.9713381, -0.23743069, 0.25742623, 0.23228574, 0.9379634, 0.5541668, 1.9559035, 1.7300897)
+[node name="Label" type="Label" parent="." unique_id=1402725302]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 512.0
+offset_top = 32.0
+offset_right = -512.0
+offset_bottom = -552.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 10
+theme_override_font_sizes/font_size = 32
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Retry" parent="." unique_id=304053437 instance=ExtResource("4_0u8pi")]
+visible = false
+metadata/_edit_vertical_guides_ = [576.0]
 
 [node name="Win" parent="." unique_id=1149770935 instance=ExtResource("5_0u8pi")]
 
@@ -180,3 +196,8 @@ transform = Transform3D(0.043544136, 0, 0.101871036, 0, 0.11078728, 0, -0.101871
 shaded = true
 texture_filter = 0
 texture = ExtResource("9_o4jo6")
+visible = false
+metadata/_edit_vertical_guides_ = [576.0]
+
+[node name="Tutorial" parent="." unique_id=1681356119 instance=ExtResource("6_ys6xq")]
+visible = false

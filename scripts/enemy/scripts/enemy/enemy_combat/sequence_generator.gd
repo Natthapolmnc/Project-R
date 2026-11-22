@@ -16,8 +16,8 @@ const TYPE_NAMES: Array[String] = [
 	"slow_then_rush", "bait_and_strike", "chaotic"
 ]
 
-const TRICK_SCALING: Dictionary = {1: 1, 2: 2, 3: 2}
-const ATTACK_SCALING: Dictionary = {1: 1, 2: 1, 3: 2}
+const TRICK_SCALING: Dictionary = {1: 1, 2: 1, 3: 1}
+const ATTACK_SCALING: Dictionary = {1: 1, 2: 1, 3: 1}
 
 ## Minimum time between the *starts* of moves; raise this for long animations.
 const MIN_GAP: float = 0.75

@@ -161,6 +161,8 @@ func _process(delta: float) -> void:
 		):
 		_timeout_emitted = true
 		enemy_timeout.emit()
+		timing_player.play("timeout")
+		CombatFx.trigger("timeout")
 		return
 
 	# A move must finish before the next one starts. Overdue moves queue up.
@@ -188,9 +190,10 @@ func _start_move(code: String) -> bool:
 
 	current_move = move
 	_set_windows(false, false)
-	_set_state(State.ATTACK)
 	if move.kind == EnemyMove.Kind.TRICK:
 		_set_state(State.PASSIVE)
+	else:
+		_set_state(State.ATTACK)
 	timing_player.play(animation_name)
 	action_started.emit(move)
 	return true
@@ -203,6 +206,7 @@ func _on_animation_finished(_animation_name: StringName) -> void:
 		recover_from_down()
 		return
 	if current_move == null:
+		_play_idle()
 		return
 	var completed_move: EnemyMove = current_move
 	timing_player.stop()
@@ -292,7 +296,6 @@ func is_dead() -> bool:
 
 
 func receive_parry() -> bool:
-
 	if not can_be_parried():
 		return false
 	resource.cur_stab = maxi(resource.cur_stab - 1, 0)
@@ -303,6 +306,10 @@ func receive_parry() -> bool:
 		_set_state(State.PASSIVE)
 		_play_idle()
 	return true
+
+
+func on_dodge() -> void:
+	timing_player.play("dodge")
 
 
 #func got_parried() -> void:
@@ -394,3 +401,11 @@ func set_duration(duration: float) -> void:
 
 func set_profile(prof: EnemyProfile) -> void:
 	profile = prof
+
+
+func play_spark() -> void:
+	CombatFx.trigger("spark", $weapon)
+
+
+func play_slash() -> void:
+	AudioPlayer.play_slash()

@@ -8,8 +8,10 @@ extends Node
 @onready var player: Player = $"../player_spawner/Player"
 @onready var enemy_spawner: Marker3D = $"../enemy_spawner"
 @onready var clock: Label = $"../Label"
+@onready var clock: Label = $"../Label"
 @onready var retry: CanvasLayer = $"../Retry"
 @onready var win: CanvasLayer = $"../Win"
+@onready var tutorial: CanvasLayer = $"../Tutorial"
 @onready var tutorial: CanvasLayer = $"../Tutorial"
 
 # ==============================
@@ -187,6 +189,12 @@ func spawn_enemy(pause_enemy: bool = false) -> void:
 			cur_enemy.enemy_timeout.connect(on_enemy_timeout)
 
 	display_enemy()
+	
+	if not tutorial_done:
+		if not action_tutorial_done:
+			cur_enemy.state_changed.connect(on_first_parry)
+			cur_enemy.state_changed.connect(on_first_slash)
+		cur_enemy.enemy_timeout.connect(on_enemy_timeout)
 
 
 func display_enemy() -> void:

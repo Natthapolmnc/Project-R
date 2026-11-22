@@ -4,7 +4,6 @@
 
 [node name="Retry" type="CanvasLayer" unique_id=304053437]
 script = ExtResource("1_j8tul")
-metadata/_edit_vertical_guides_ = [576.0]
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=543859060]
 anchors_preset = 15
@@ -15,17 +14,17 @@ grow_vertical = 2
 color = Color(0.14406255, 0.14406255, 0.14406255, 0.18039216)
 
 [node name="Retry" type="Button" parent="." unique_id=1047523691]
-offset_left = 496.0
-offset_top = 225.0
-offset_right = 654.0
-offset_bottom = 256.0
+offset_left = 472.0
+offset_top = 264.0
+offset_right = 680.0
+offset_bottom = 296.0
 text = "Retry Current Level"
 
 [node name="MainMenu" type="Button" parent="." unique_id=316338246]
-offset_left = 531.0
-offset_top = 305.0
-offset_right = 627.0
-offset_bottom = 336.0
+offset_left = 472.0
+offset_top = 344.0
+offset_right = 680.0
+offset_bottom = 376.0
 text = "Main Menu"
 
 [connection signal="pressed" from="Retry" to="." method="_on_retry_pressed"]

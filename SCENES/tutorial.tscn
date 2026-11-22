@@ -1,0 +1,134 @@
+[gd_scene format=3 uid="uid://ijfubmhn65vv"]
+
+[ext_resource type="Script" uid="uid://d1vequl7vhoko" path="res://SCENES/tutorial.gd" id="1_8lu41"]
+[ext_resource type="Texture2D" uid="uid://cnj0ninjrig4r" path="res://SCENES/sprite/project_r_UI_box.png" id="1_ktu3x"]
+
+[node name="Tutorial" type="CanvasLayer" unique_id=1681356119]
+script = ExtResource("1_8lu41")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1204118583]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(0, 0, 0, 0.06666667)
+
+[node name="FirstParry" type="Control" parent="." unique_id=1900407100]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1112.0
+offset_bottom = -608.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="FirstParry" unique_id=578281250]
+layout_mode = 0
+offset_left = 672.0
+offset_top = 24.0
+offset_right = 1128.0
+offset_bottom = 160.0
+texture = ExtResource("1_ktu3x")
+patch_margin_left = 23
+patch_margin_top = 23
+patch_margin_right = 23
+patch_margin_bottom = 23
+
+[node name="Label" type="Label" parent="FirstParry/NinePatchRect" unique_id=320852689]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "When you see enemy's sword moving slowly,
+a sudden flash, and the orange dot particles: 
+> Right Click to Parry <"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FirstSlash" type="Control" parent="." unique_id=1501973203]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1112.0
+offset_bottom = -608.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="FirstSlash" unique_id=1159440588]
+layout_mode = 0
+offset_left = 672.0
+offset_top = 26.0
+offset_right = 1128.0
+offset_bottom = 160.0
+texture = ExtResource("1_ktu3x")
+patch_margin_left = 23
+patch_margin_top = 23
+patch_margin_right = 23
+patch_margin_bottom = 23
+
+[node name="Label" type="Label" parent="FirstSlash/NinePatchRect" unique_id=457502985]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Enemy goes down right after getting parried
+for a short period of time:
+> Left Click to Finish Him <"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FirstTimeout" type="Control" parent="." unique_id=1112384789]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1112.0
+offset_bottom = -608.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="FirstTimeout" unique_id=448884083]
+layout_mode = 0
+offset_left = 672.0
+offset_top = 24.0
+offset_right = 1128.0
+offset_bottom = 160.0
+texture = ExtResource("1_ktu3x")
+patch_margin_left = 23
+patch_margin_top = 23
+patch_margin_right = 23
+patch_margin_bottom = 23
+
+[node name="Label" type="Label" parent="FirstTimeout/NinePatchRect" unique_id=1920240969]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Each enemy only attack once,
+missed the opportunity and you are done"
+horizontal_alignment = 1
+vertical_alignment = 1
