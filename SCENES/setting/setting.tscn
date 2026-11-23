@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://npdctvopjpab" path="res://SCENES/setting/setting.gd" id="1_2r66t"]
 [ext_resource type="Texture2D" uid="uid://cnj0ninjrig4r" path="res://SCENES/sprite/project_r_UI_box.png" id="2_0cgv4"]
 [ext_resource type="Script" uid="uid://dlscmjjcxa5if" path="res://SCENES/setting/keybind_button.gd" id="2_n5x7k"]
+[ext_resource type="FontFile" uid="uid://cecy83kq815kd" path="res://default_font_font.tres" id="3_us6n5"]
+[ext_resource type="LabelSettings" uid="uid://dkph1iwqqhyky" path="res://default_font.tres" id="5_opwk6"]
 
 [node name="Setting" type="Node2D" unique_id=2000945032]
 script = ExtResource("1_2r66t")
@@ -46,6 +48,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 5
+theme_override_fonts/font = ExtResource("3_us6n5")
 text = "Slash"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -60,6 +63,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 5
+theme_override_fonts/font = ExtResource("3_us6n5")
 script = ExtResource("2_n5x7k")
 action_name = "slash"
 
@@ -83,6 +87,7 @@ anchor_bottom = 1.0
 offset_right = -152.0
 size_flags_horizontal = 3
 size_flags_vertical = 5
+theme_override_fonts/font = ExtResource("3_us6n5")
 text = "Parry"
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -131,6 +136,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 5
 text = "Master"
+label_settings = ExtResource("5_opwk6")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -165,6 +171,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 5
 text = "Music"
+label_settings = ExtResource("5_opwk6")
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -199,6 +206,7 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 5
 text = "SFX"
+label_settings = ExtResource("5_opwk6")
 horizontal_alignment = 1
 vertical_alignment = 1
 

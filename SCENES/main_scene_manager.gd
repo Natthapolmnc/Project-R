@@ -575,29 +575,31 @@ func victory() -> void:
 	player.set_receive_input(false)
 
 
-# ==============================
-# TUTORIAL: FIRST Trick
-# ==============================
+#==============================
+#TUTORIAL: FIRST Trick
+#==============================
 func on_first_trick(anim_name: String) -> void:
 	if not anim_name.begins_with("trick"):
 		return
-	
+
 	if tutorial_done or not first_trick:
 		return
 
 	if tutorial_step != TutorialStep.NONE:
 		return
-	
+
 	cur_enemy.timing_player.animation_started.disconnect(on_first_trick)
-	
+
 	tutorial_step = TutorialStep.TRICK
 
 	tutorial.visible = true
 	tutorial.first_trick.visible = true
 
+	player.set_receive_input(false)
+
 	Engine.time_scale = 1e-6
 
-	await get_tree().create_timer(5, true, false, true).timeout
+	await get_tree().create_timer(1.5, true, false, true).timeout
 	on_trick_tutorial_finished()
 
 
@@ -607,6 +609,8 @@ func on_trick_tutorial_finished() -> void:
 
 	first_trick = false
 	tutorial_step = TutorialStep.NONE
+
+	player.set_receive_input(true)
 
 	Engine.time_scale = 1.0
 	hide_tutorial()
