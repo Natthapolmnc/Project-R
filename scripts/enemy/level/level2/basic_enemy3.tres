@@ -39,6 +39,8 @@ metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
 [resource]
 script = ExtResource("2_3g5g5")
+sequence_pattern = 7
+max_stab = 2
 initial_stance = &"up"
 idle_by_stance = Dictionary[StringName, StringName]({
 &"down": &"idle_down",

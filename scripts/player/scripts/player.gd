@@ -55,7 +55,7 @@ func _action_handler()->void:
 		if (cur_enemy.state==Enemy.State.DOWN):
 			slashing.emit()
 			cur_enemy.receive_hit()
-			CombatFx.trigger("blood", fx_panel)
+			CombatFx.trigger("blood", cur_enemy.effect_origin)
 			AudioPlayer.play_slash()
 			if is_on_first_slash:
 					is_on_first_slash = false

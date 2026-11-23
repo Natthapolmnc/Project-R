@@ -10,16 +10,15 @@ signal strike_reached(move: EnemyMove)
 signal trick_revealed(move: EnemyMove)
 signal enemy_is_finished
 signal enemy_died
-signal stability_changed(current: int, maximum: int)
+signal stability_changed(current: float, maximum: float)
 
 func _emit_stability_changed() -> void:
-	stability_changed.emit(resource.cur_stab, resource.max_stab)
+	stability_changed.emit(profile.cur_stab, profile.max_stab)
 
 ## Animation windows are independent of these broad enemy states.
 enum State { PASSIVE, ATTACK, DOWN }
 
 @export_category("Enemy Setup")
-@export var resource: CharacterResource = CharacterResource.new()
 @export var profile: EnemyProfile
 
 @export_category("Sequence")
@@ -36,8 +35,8 @@ enum State { PASSIVE, ATTACK, DOWN }
 @export_category("Stability Recovery")
 ## Real seconds after the most recent parry before recovery begins.
 @export_range(0.0, 30.0, 0.1) var stability_recovery_delay: float = 3.0
-## Real seconds between each +1 stability recovery.
-@export_range(0.1, 10.0, 0.1) var stability_recovery_interval: float = 1.0
+## Stability points restored per real second (smooth fractional recovery).
+@export_range(0.1, 10.0, 0.1) var stability_recovery_rate: float = 1.0
 
 var timing_player: AnimationPlayer
 
@@ -63,7 +62,8 @@ var _attackable: bool = false
 var _parryable: bool = false
 var _dead: bool = false
 var _timeout_emitted: bool = false
-var _next_stability_recovery_ms: int = -1
+var _stability_recovery_start_usec: int = -1
+var _last_stability_recovery_usec: int = -1
 
 
 
@@ -77,11 +77,9 @@ func _ready() -> void:
 		push_error("Enemy needs an EnemyProfile and AnimationPlayer")
 		set_process(false)
 		return
-
-	# Give each enemy its own HP/stability values even if scenes share a Resource.
-	resource = CharacterResource.new() if resource == null else resource.duplicate(true) as CharacterResource
 	timing_player.animation_finished.connect(_on_animation_finished)
-	
+	count_down_visual.countdown_time=sequence_duration
+	count_down_visual.clocking=true
 	set_clocking(true)
 	
 	start_sequence()
@@ -94,9 +92,10 @@ func start_sequence(duration: float = -1.0) -> void:
 		sequence_duration = duration
 
 	_cancel_action()
-	resource.on_start()
+	profile.on_start()
 	_dead = false
-	_next_stability_recovery_ms = -1
+	_stability_recovery_start_usec = -1
+	_last_stability_recovery_usec = -1
 	_emit_stability_changed()
 	current_stance = profile.initial_stance
 	current_time = sequence_duration
@@ -111,7 +110,7 @@ func start_sequence(duration: float = -1.0) -> void:
 	if auto_generate_sequence:
 		# Profile pattern 0 = random. Others map to the generator enum.
 		var generated: Dictionary = SequenceGenerator.generate(
-			cur_level, sequence_duration, profile.sequence_pattern - 1
+			profile, sequence_duration, profile.sequence_pattern - 1
 		)
 		active_pattern = str(generated["type"])
 		for entry: String in generated["sequence"]:
@@ -313,12 +312,12 @@ func receive_parry() -> bool:
 	if not can_be_parried():
 		return false
 
-	resource.cur_stab = maxi(resource.cur_stab - 1, 0)
+	profile.cur_stab = maxf(profile.cur_stab - 1.0, 0.0)
 	_emit_stability_changed()
 
 	_cancel_action()
 
-	if resource.cur_stab <= 0:
+	if profile.cur_stab <= 0:
 		_enter_down()
 	else:
 		_restart_stability_recovery()
@@ -333,31 +332,42 @@ func receive_parry() -> bool:
 # ----------------------------------------------------
 
 func _restart_stability_recovery() -> void:
-	# Every successful parry restarts the wait.
-	if _dead or state == State.DOWN or resource.cur_stab >= resource.max_stab:
-		_next_stability_recovery_ms = -1
+	# Successful parries reset the real-time delay.
+	if _dead or state == State.DOWN or profile.cur_stab >= profile.max_stab:
+		_stability_recovery_start_usec = -1
+		_last_stability_recovery_usec = -1
 		return
-	_next_stability_recovery_ms = Time.get_ticks_msec() + roundi(stability_recovery_delay * 1000.0)
+
+	_stability_recovery_start_usec = Time.get_ticks_usec() + roundi(stability_recovery_delay * 1000000.0)
+	_last_stability_recovery_usec = _stability_recovery_start_usec
 
 
 func _process_stability_recovery() -> void:
-	if _next_stability_recovery_ms < 0 or state == State.DOWN:
+	if _stability_recovery_start_usec < 0 or state == State.DOWN:
 		return
 
-	var now_ms: int = Time.get_ticks_msec()
-	if now_ms < _next_stability_recovery_ms:
+	var now_usec: int = Time.get_ticks_usec()
+	if now_usec <= _stability_recovery_start_usec:
 		return
 
-	# Account for more than one recovery tick if a frame was delayed.
-	var interval_ms: int = maxi(roundi(stability_recovery_interval * 1000.0), 1)
-	var points: int = 1 + int((now_ms - _next_stability_recovery_ms) / interval_ms)
-	resource.cur_stab = mini(resource.cur_stab + points, resource.max_stab)
-	_emit_stability_changed()
+	# Wall-clock time: unaffected by combat slowdown or Engine.time_scale.
+	# Recover fractional points every frame, not one integer point per interval.
+	var elapsed_real_seconds: float = float(now_usec - _last_stability_recovery_usec) / 1000000.0
+	_last_stability_recovery_usec = now_usec
+	if elapsed_real_seconds <= 0.0:
+		return
 
-	if resource.cur_stab >= resource.max_stab:
-		_next_stability_recovery_ms = -1
-	else:
-		_next_stability_recovery_ms += points * interval_ms
+	var previous_stability: float = profile.cur_stab
+	profile.cur_stab = minf(
+		profile.cur_stab + stability_recovery_rate * elapsed_real_seconds,
+		profile.max_stab
+	)
+	if not is_equal_approx(previous_stability, profile.cur_stab):
+		_emit_stability_changed()
+
+	if profile.cur_stab >= profile.max_stab:
+		_stability_recovery_start_usec = -1
+		_last_stability_recovery_usec = -1
 
 
 func on_dodge() -> void:
@@ -372,15 +382,16 @@ func on_dodge() -> void:
 func receive_hit() -> bool:
 	if not can_be_attacked():
 		return false
-	resource.on_being_finished()
+	profile.on_being_finished()
 	enemy_is_finished.emit()
-	if resource.is_dead():
+	if profile.is_dead():
 		_die()
 	return true
 
 
 func _enter_down() -> void:
-	_next_stability_recovery_ms = -1
+	_stability_recovery_start_usec = -1
+	_last_stability_recovery_usec = -1
 	_set_state(State.DOWN)
 	_set_windows(true, false)
 	if profile.down_animation != &"" and timing_player.has_animation(profile.down_animation):
@@ -392,10 +403,11 @@ func _enter_down() -> void:
 func recover_from_down() -> void:
 	if state != State.DOWN or _dead:
 		return
-	resource.recover_from_down()
+	profile.recover_from_down()
 	# Refill only after the down animation finishes, not immediately on parry.
-	resource.cur_stab = resource.max_stab
-	_next_stability_recovery_ms = -1
+	profile.cur_stab = profile.max_stab
+	_stability_recovery_start_usec = -1
+	_last_stability_recovery_usec = -1
 	_emit_stability_changed()
 	_set_windows(false, false)
 	_set_state(State.PASSIVE)
@@ -403,7 +415,8 @@ func recover_from_down() -> void:
 
 
 func _die() -> void:
-	_next_stability_recovery_ms = -1
+	_stability_recovery_start_usec = -1
+	_last_stability_recovery_usec = -1
 	_cancel_action()
 	_dead = true
 	if profile.death_animation != &"" and timing_player.has_animation(profile.death_animation):
@@ -434,12 +447,12 @@ func get_cur_state() -> State:
 	return state
 
 
-func get_stability() -> int:
-	return resource.cur_stab
+func get_stability() -> float:
+	return profile.cur_stab
 
 
 func get_hp() -> int:
-	return resource.get_hp()
+	return profile.get_hp()
 
 
 func set_clocking(enabled: bool) -> void:

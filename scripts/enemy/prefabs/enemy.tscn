@@ -1,17 +1,12 @@
 [gd_scene format=3 uid="uid://drd61nc480lg"]
 
-[ext_resource type="Script" uid="uid://ruemvvfr76w5" path="res://scripts/enemy/scripts/enemy/enemy_combat/enemy.gd" id="1_1ej27"]
+[ext_resource type="Script" uid="uid://ruemvvfr76w5" path="res://scripts/enemy/scripts/enemy/enemy_combat/enemy.gd" id="1_jhigj"]
 [ext_resource type="Texture2D" uid="uid://dhhm40xf833pl" path="res://scripts/enemy/art/enemy.png" id="2_dufno"]
-[ext_resource type="Script" uid="uid://cdcp3xypogmnm" path="res://scripts/enemy/scripts/enemy/enemy_combat/character_resource.gd" id="2_xigy4"]
-[ext_resource type="Resource" uid="uid://bbh78i1k5ovhb" path="res://scripts/enemy/level/level1/basic_enemy1.tres" id="3_xigy4"]
+[ext_resource type="Resource" uid="uid://bbh78i1k5ovhb" path="res://scripts/enemy/level/level1/basic_enemy1.tres" id="2_yyksi"]
 [ext_resource type="Texture2D" uid="uid://cq7r0h4laxkrl" path="res://scripts/enemy/art/enemy_sword_path-Sheet.png" id="5_dufno"]
 [ext_resource type="LabelSettings" uid="uid://dkph1iwqqhyky" path="res://default_font.tres" id="6_bmeyc"]
 [ext_resource type="Script" uid="uid://bonjnd11jes07" path="res://scripts/enemy/prefabs/count_down_visual.gd" id="7_yyksi"]
 [ext_resource type="Script" uid="uid://cpfvq7gicjnu5" path="res://scripts/enemy/prefabs/stab_bar.gd" id="8_bmeyc"]
-
-[sub_resource type="Resource" id="Resource_2v1pe"]
-script = ExtResource("2_xigy4")
-metadata/_custom_type_script = "uid://cdcp3xypogmnm"
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_dufno"]
 atlas = ExtResource("2_dufno")
@@ -1973,10 +1968,10 @@ corner_detail = 2
 anti_aliasing = false
 
 [node name="Enemy" type="Node3D" unique_id=1970614869 node_paths=PackedStringArray("effect_origin", "count_down_visual")]
-script = ExtResource("1_1ej27")
-resource = SubResource("Resource_2v1pe")
-profile = ExtResource("3_xigy4")
+script = ExtResource("1_jhigj")
+profile = ExtResource("2_yyksi")
 stability_recovery_delay = 0.0
+stability_recovery_rate = 0.1
 effect_origin = NodePath("MeshInstance3D")
 count_down_visual = NodePath("enemyGUI/GUIviewport/GUIcontrol/VBoxContainer/count_down_visual")
 
@@ -2003,7 +1998,7 @@ region_rect = Rect2(0, 0, 48, 48)
 libraries/ = SubResource("AnimationLibrary_jhigj")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=427131376]
-transform = Transform3D(0.59166807, 0, 0, 0, -4.371139e-08, -0.9369536, 0, 1, -4.095554e-08, 0.4371866, 0, 0)
+transform = Transform3D(0.59166807, 0, 0, 0, -4.371139e-08, -0.9369536, 0, 1, -4.095554e-08, 0.2257905, 0, 0)
 visible = false
 mesh = SubResource("PlaneMesh_bhunq")
 
@@ -2039,7 +2034,7 @@ offset_top = -30.0
 offset_right = 256.0
 offset_bottom = 30.0
 grow_vertical = 2
-theme_override_constants/separation = -16
+theme_override_constants/separation = -6
 
 [node name="count_down_visual" type="Label" parent="enemyGUI/GUIviewport/GUIcontrol/VBoxContainer" unique_id=2131719615 node_paths=PackedStringArray("enemy")]
 layout_mode = 2

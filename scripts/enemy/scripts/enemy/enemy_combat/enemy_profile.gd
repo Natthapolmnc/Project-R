@@ -8,6 +8,37 @@ extends Resource
 )
 var sequence_pattern: int = 0
 
+@export var base_hp: int = 1
+@export var max_stab: int = 1
+
+var cur_hp: int = 1
+var cur_stab: float = 1
+
+
+func on_start() -> void:
+	cur_hp = base_hp
+	cur_stab = max_stab
+
+
+func on_being_finished() -> void:
+	cur_hp = maxi(cur_hp - 1, 0)
+
+
+func recover_from_down() -> void:
+	cur_stab = max_stab
+
+
+func is_dead() -> bool:
+	return cur_hp <= 0
+
+
+func get_hp() -> int:
+	return cur_hp
+
+
+func get_base_hp() -> int:
+	return base_hp
+
 @export var initial_stance: StringName = &"center"
 @export var idle_by_stance: Dictionary[StringName, StringName] = {
 	&"center": &"idle_center"
