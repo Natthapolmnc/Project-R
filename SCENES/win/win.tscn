@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b8d1wmkd6heky"]
 
 [ext_resource type="Script" uid="uid://bg4rswkyrwq6c" path="res://SCENES/win/win.gd" id="1_gjcb2"]
+[ext_resource type="Texture2D" uid="uid://frpcbdcb3oe1" path="res://SCENES/sprite/project_r_UI_box-frame.png" id="2_4ajdo"]
 
 [node name="Win" type="CanvasLayer" unique_id=304053437]
 script = ExtResource("1_gjcb2")
@@ -12,6 +13,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.14406255, 0.14406255, 0.14406255, 0.18039216)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="ColorRect" unique_id=1314045055]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_4ajdo")
+patch_margin_left = 23
+patch_margin_top = 23
+patch_margin_right = 23
+patch_margin_bottom = 23
 
 [node name="RetrySameLevel" type="Button" parent="." unique_id=1047523691]
 offset_left = 472.0
@@ -33,6 +47,18 @@ offset_top = 224.0
 offset_right = 680.0
 offset_bottom = 256.0
 text = "Next Level"
+
+[node name="Label" type="Label" parent="." unique_id=910463133]
+offset_left = 472.0
+offset_top = 104.0
+offset_right = 680.0
+offset_bottom = 192.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 64
+text = "WON"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="RetrySameLevel" to="." method="_on_retry_pressed"]
 [connection signal="pressed" from="MainMenu" to="." method="_on_main_menu_pressed"]

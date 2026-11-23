@@ -55,10 +55,6 @@ var _dead: bool = false
 var _timeout_emitted: bool = false
 
 
-#func _init(prof: EnemyProfile, duration: float) -> void:
-	#sequence_duration = duration
-	#profile = prof
-
 
 func _ready() -> void:
 	for i in get_children():
@@ -302,6 +298,7 @@ func receive_parry() -> bool:
 	_cancel_action()
 	if resource.cur_stab <= 0:
 		_enter_down()
+		resource.cur_stab = resource.max_stab
 	else:
 		_set_state(State.PASSIVE)
 		_play_idle()
