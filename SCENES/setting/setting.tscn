@@ -114,7 +114,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 118.0
 offset_right = -18.0
-offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 max_value = 1.5
@@ -127,7 +126,6 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -626.0
-offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -150,7 +148,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 118.0
 offset_right = -18.0
-offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 max_value = 1.5
@@ -163,7 +160,6 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -618.0
-offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -186,7 +182,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 118.0
 offset_right = -18.0
-offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 max_value = 1.5
@@ -199,198 +194,6 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -618.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "SFX"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Back2" type="Button" parent="." unique_id=1999089185]
-offset_left = 472.0
-offset_top = 472.0
-offset_right = 680.0
-offset_bottom = 504.0
-text = "back"
-
-[node name="HBoxContainer3" type="Panel" parent="." unique_id=1680400658]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 472.0
-offset_top = 136.0
-offset_right = 680.0
-offset_bottom = 168.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_vertical = 3
-
-[node name="Slash" type="Label" parent="HBoxContainer3" unique_id=792949245]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -152.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "Slash"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="SlashKey" type="Button" parent="HBoxContainer3" unique_id=496301366]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 56.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 5
-script = ExtResource("2_n5x7k")
-action_name = "slash"
-
-[node name="HBoxContainer4" type="Panel" parent="." unique_id=1259884497]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 472.0
-offset_top = 200.0
-offset_right = 680.0
-offset_bottom = 232.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_vertical = 3
-
-[node name="Parry" type="Label" parent="HBoxContainer4" unique_id=1122931930]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -152.0
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "Parry"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="ParryKey" type="Button" parent="HBoxContainer4" unique_id=1670075732]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 56.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 5
-script = ExtResource("2_n5x7k")
-action_name = "parry"
-
-[node name="Panel4" type="Panel" parent="." unique_id=245499023]
-offset_left = 208.0
-offset_top = 288.0
-offset_right = 944.0
-offset_bottom = 320.0
-
-[node name="MaxterSlider" type="HSlider" parent="Panel4" unique_id=165560618]
-custom_minimum_size = Vector2(600, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 118.0
-offset_right = -18.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-max_value = 1.5
-step = 0.001
-value = 1.5
-
-[node name="Master" type="Label" parent="Panel4" unique_id=744325482]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -626.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "Master"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Panel5" type="Panel" parent="." unique_id=1477435429]
-offset_left = 208.0
-offset_top = 336.0
-offset_right = 944.0
-offset_bottom = 368.0
-
-[node name="MusicSlider" type="HSlider" parent="Panel5" unique_id=715202451]
-custom_minimum_size = Vector2(600, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 118.0
-offset_right = -18.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-max_value = 1.5
-step = 0.001
-value = 0.85
-
-[node name="Music" type="Label" parent="Panel5" unique_id=1274089555]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -618.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 3
-size_flags_vertical = 5
-text = "Music"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Panel6" type="Panel" parent="." unique_id=1120500818]
-offset_left = 208.0
-offset_top = 384.0
-offset_right = 944.0
-offset_bottom = 416.0
-
-[node name="SFXSlider" type="HSlider" parent="Panel6" unique_id=2094282609]
-custom_minimum_size = Vector2(600, 0)
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = 118.0
-offset_right = -18.0
-offset_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-max_value = 1.5
-step = 0.001
-value = 1.5
-
-[node name="SFX" type="Label" parent="Panel6" unique_id=1634987590]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_right = -618.0
-offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -403,7 +206,3 @@ vertical_alignment = 1
 [connection signal="value_changed" from="Panel/MaxterSlider" to="." method="_on_maxter_slider_value_changed"]
 [connection signal="value_changed" from="Panel2/MusicSlider" to="." method="_on_music_slider_value_changed"]
 [connection signal="value_changed" from="Panel3/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
-[connection signal="pressed" from="Back2" to="." method="on_back_button_pressed"]
-[connection signal="value_changed" from="Panel4/MaxterSlider" to="." method="_on_maxter_slider_value_changed"]
-[connection signal="value_changed" from="Panel5/MusicSlider" to="." method="_on_music_slider_value_changed"]
-[connection signal="value_changed" from="Panel6/SFXSlider" to="." method="_on_sfx_slider_value_changed"]
