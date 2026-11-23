@@ -29,6 +29,10 @@ var is_stun: bool = false
 var receive_input: bool = true
 var is_dead: bool = true
 
+# Tutorial
+var is_on_first_parry: bool = false
+var is_on_first_slash: bool = false
+
 
 func _ready() -> void:
 	anim.animation_finished.connect(_animation_ending_handler)
@@ -36,6 +40,12 @@ func _ready() -> void:
 
 func _action_handler()->void:
 	if is_stun or not receive_input:
+		return
+	
+	if is_on_first_parry and not Input.is_action_just_pressed("parry"):
+		return
+	
+	if is_on_first_slash and not Input.is_action_just_pressed("slash"):
 		return
 	
 	if Input.is_action_just_pressed("slash"):
@@ -47,10 +57,13 @@ func _action_handler()->void:
 			cur_enemy.receive_hit()
 			CombatFx.trigger("blood", fx_panel)
 			AudioPlayer.play_slash()
+			if is_on_first_slash:
+					is_on_first_slash = false
 		elif (cur_enemy.timing_player.current_animation.begins_with("idle")):
 			cur_enemy.on_dodge()
+			if not anim.animation_changed.is_connected(set_stun):
+				anim.animation_changed.connect(set_stun.bind(true), CONNECT_ONE_SHOT)
 			anim.queue(stun_anim)
-			is_stun = true
 			AudioPlayer.play_slash_fail()
 		else:
 			anim.play(stun_anim)
@@ -66,6 +79,8 @@ func _action_handler()->void:
 				anim.play(parry_anim)
 				CombatFx.trigger("parry", fx_panel)
 				AudioPlayer.play_parry_success()
+				if is_on_first_parry:
+					is_on_first_parry = false
 			else:
 				anim.play(stun_anim)
 				is_stun = true
@@ -86,6 +101,28 @@ func _process(_delta: float) -> void:
 	pass
 
 
+# ==============================
+# TUTORIAL: FIRST PARRY
+# ==============================
+
+func on_first_parry() -> void:
+	is_stun = false
+	is_on_first_parry = true
+
+
+# ==============================
+# TUTORIAL: FIRST SLASH
+# ==============================
+
+func on_first_slash() -> void:
+	is_stun = false
+	is_on_first_slash = true
+
+
+# ==============================
+# 
+# ==============================
+
 func get_fx_panel() -> MeshInstance3D:
 	return player_fx_panel
 
@@ -103,3 +140,11 @@ func on_dead() -> void:
 
 func reset_scale() -> void:
 	visual.scale = Vector3(1, 1, 1)
+
+
+func set_stun(_arg, _args, value: bool) -> void:
+	is_stun = value
+
+
+func _animation_play_black_stun_flash() -> void:
+	CombatFx.trigger("stun")

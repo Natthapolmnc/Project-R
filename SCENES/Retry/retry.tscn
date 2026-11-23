@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dfsiq5og33nm2"]
 
 [ext_resource type="Script" uid="uid://diy7bxjqr2u2g" path="res://SCENES/Retry/retry.gd" id="1_j8tul"]
+[ext_resource type="Texture2D" uid="uid://frpcbdcb3oe1" path="res://SCENES/sprite/project_r_UI_box-frame.png" id="2_1jt21"]
 
 [node name="Retry" type="CanvasLayer" unique_id=304053437]
 script = ExtResource("1_j8tul")
@@ -12,6 +13,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.14406255, 0.14406255, 0.14406255, 0.18039216)
+
+[node name="NinePatchRect" type="NinePatchRect" parent="ColorRect" unique_id=1602951848]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_1jt21")
+patch_margin_left = 23
+patch_margin_top = 23
+patch_margin_right = 23
+patch_margin_bottom = 23
 
 [node name="Retry" type="Button" parent="." unique_id=1047523691]
 offset_left = 472.0
@@ -26,6 +40,18 @@ offset_top = 344.0
 offset_right = 680.0
 offset_bottom = 376.0
 text = "Main Menu"
+
+[node name="Label" type="Label" parent="." unique_id=1699557742]
+offset_left = 456.0
+offset_top = 104.0
+offset_right = 696.0
+offset_bottom = 192.0
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 15
+theme_override_font_sizes/font_size = 64
+text = "DEFEAT"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [connection signal="pressed" from="Retry" to="." method="_on_retry_pressed"]
 [connection signal="pressed" from="MainMenu" to="." method="_on_main_menu_pressed"]

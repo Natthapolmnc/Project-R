@@ -2,10 +2,16 @@
 
 [ext_resource type="Script" uid="uid://deta5qxynpknq" path="res://SCENES/main_menu/input_manager.gd" id="1_oofpe"]
 [ext_resource type="Texture2D" uid="uid://cnj0ninjrig4r" path="res://SCENES/sprite/project_r_UI_box.png" id="2_4ya1h"]
+[ext_resource type="Texture2D" uid="uid://0vckg4ls3by" path="res://SCENES/main_menu/RoninRush-whiteBG.png" id="3_c22kn"]
+[ext_resource type="Texture2D" uid="uid://blovfhexsqdpw" path="res://SCENES/assets/Crownel_logo.png" id="4_uw6h3"]
+[ext_resource type="Texture2D" uid="uid://c5solxvvjd8m5" path="res://SCENES/assets/EyesOn._logo.png" id="5_xhq7v"]
 
-[node name="MainMenu" type="Node2D" unique_id=1536542491]
+[node name="MainMenu" type="Control" unique_id=1098762862]
+layout_mode = 3
+anchors_preset = 0
 
 [node name="NinePatchRect" type="NinePatchRect" parent="." unique_id=1542688592]
+layout_mode = 0
 offset_right = 1152.0
 offset_bottom = 648.0
 texture = ExtResource("2_4ya1h")
@@ -20,6 +26,7 @@ script = ExtResource("1_oofpe")
 
 [node name="SettingButton" type="Button" parent="." unique_id=1245397547]
 custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -33,6 +40,7 @@ text = "Setting"
 
 [node name="PlayButton" type="Button" parent="." unique_id=909885171]
 custom_minimum_size = Vector2(200, 0)
+layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.062000003
 anchor_top = 0.143
@@ -45,6 +53,33 @@ offset_bottom = 432.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Play"
+
+[node name="TextureRect" type="TextureRect" parent="." unique_id=1650864781]
+layout_mode = 1
+offset_left = 432.0
+offset_top = 72.0
+offset_right = 720.0
+offset_bottom = 360.0
+texture = ExtResource("3_c22kn")
+expand_mode = 1
+
+[node name="TextureRect2" type="TextureRect" parent="." unique_id=426641589]
+layout_mode = 1
+offset_left = 896.0
+offset_top = 512.0
+offset_right = 992.0
+offset_bottom = 608.0
+texture = ExtResource("4_uw6h3")
+expand_mode = 1
+
+[node name="TextureRect3" type="TextureRect" parent="." unique_id=1461603787]
+layout_mode = 1
+offset_left = 1000.0
+offset_top = 499.0
+offset_right = 1120.0
+offset_bottom = 619.0
+texture = ExtResource("5_xhq7v")
+expand_mode = 1
 
 [connection signal="pressed" from="SettingButton" to="InputManager" method="_on_setting_button_pressed"]
 [connection signal="pressed" from="PlayButton" to="InputManager" method="_on_play_button_pressed"]

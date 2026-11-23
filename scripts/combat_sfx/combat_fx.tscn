@@ -38,6 +38,12 @@ cleanup_seconds = 1.0
 flash_color = Color(1, 1, 1, 0.15294118)
 metadata/_custom_type_script = "uid://d2xxicnxfqptx"
 
+[sub_resource type="Resource" id="Resource_l28hy"]
+script = ExtResource("2_t48ll")
+id = &"stun"
+flash_color = Color(0, 0, 0, 0.3019608)
+metadata/_custom_type_script = "uid://d2xxicnxfqptx"
+
 [node name="CombatFX" type="Node" unique_id=143107392]
 script = ExtResource("1_combat_fx")
-presets = Array[ExtResource("2_t48ll")]([SubResource("Resource_6uqi0"), SubResource("Resource_535ly"), SubResource("Resource_dufno"), SubResource("Resource_2n8uo")])
+presets = Array[ExtResource("2_t48ll")]([SubResource("Resource_6uqi0"), SubResource("Resource_535ly"), SubResource("Resource_dufno"), SubResource("Resource_2n8uo"), SubResource("Resource_l28hy")])

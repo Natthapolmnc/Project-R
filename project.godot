@@ -13,7 +13,10 @@ config_version=5
 config/name="20-sec-ronin"
 run/main_scene="uid://c478xfuoxr71i"
 config/features=PackedStringArray("4.7", "Forward Plus")
+boot_splash/bg_color=Color(0.31764707, 0.30980393, 0.36862746, 1)
+boot_splash/image="uid://vqpy22865eop"
 config/icon="uid://gjninsosqclf"
+boot_splash/minimum_display_time=3000
 
 [audio]
 

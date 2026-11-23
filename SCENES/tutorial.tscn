@@ -96,7 +96,6 @@ horizontal_alignment = 1
 vertical_alignment = 1
 
 [node name="FirstTimeout" type="Control" parent="." unique_id=1112384789]
-visible = false
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -129,7 +128,45 @@ offset_right = -24.0
 offset_bottom = -24.0
 grow_horizontal = 2
 grow_vertical = 2
-text = "Each enemy only attack once,
+text = "Each enemy only goes down once,
 missed the opportunity and you are done"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="FirstTrick" type="Control" parent="." unique_id=268165914]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -1112.0
+offset_bottom = -608.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NinePatchRect" type="NinePatchRect" parent="FirstTrick" unique_id=1199757782]
+layout_mode = 0
+offset_left = 672.0
+offset_top = 24.0
+offset_right = 1128.0
+offset_bottom = 160.0
+texture = ExtResource("1_ktu3x")
+patch_margin_left = 23
+patch_margin_top = 23
+patch_margin_right = 23
+patch_margin_bottom = 23
+
+[node name="Label" type="Label" parent="FirstTrick/NinePatchRect" unique_id=1457485195]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = 24.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "Enemy may or may not trick you,
+try not to react or get stunned for 1.5 secs"
 horizontal_alignment = 1
 vertical_alignment = 1

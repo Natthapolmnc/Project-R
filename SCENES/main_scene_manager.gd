@@ -26,7 +26,8 @@ const base_time: float = 20.0
 # ENEMY / LEVEL DATA
 # ==============================
 @export var enemy_template: PackedScene = preload("res://scripts/enemy/prefabs/enemy.tscn")
-@export var cur_level: int = 1
+
+@export var cur_level: int = 4
 @export var level: String = "res://scripts/enemy/level/"
 
 var cur_level_profiles: Array[EnemyProfile] = []
@@ -75,11 +76,13 @@ var turn_tween: Tween
 # ==============================
 enum TutorialStep {
 	NONE,
+	TRICK,
 	PARRY,
 	SLASH,
 	TIMEOUT
 }
 
+var first_trick: bool = true
 var first_parry: bool = true
 var first_slash: bool = true
 var first_timeout: bool = true
@@ -238,7 +241,7 @@ func level_initialization(advance: bool) -> void:
 	generated_time = split_time_randomly(
 		base_time,
 		cur_level_profiles.size(),
-		(base_time / float(cur_level_profiles.size())) - 1.0
+		(base_time / float(cur_level_profiles.size())) - 0.5
 	)
 
 	player.set_receive_input(true)
@@ -258,6 +261,8 @@ func spawn_enemy(pause_enemy: bool = false) -> void:
 	cur_index += 1
 
 	cur_enemy = enemy_template.instantiate() as Enemy
+	if cur_level_profiles.size() == 1:
+		cur_enemy.resource.base_hp = 3
 
 	if cur_enemy == null:
 		push_error(
@@ -278,6 +283,8 @@ func spawn_enemy(pause_enemy: bool = false) -> void:
 	cur_enemy.strike_reached.connect(game_over)
 	cur_enemy.enemy_died.connect(on_enemy_died)
 
+	display_enemy()
+	
 	# Connect tutorial events until completed.
 	if not tutorial_done:
 		if not action_tutorial_done:
@@ -286,8 +293,9 @@ func spawn_enemy(pause_enemy: bool = false) -> void:
 
 		if first_timeout:
 			cur_enemy.enemy_timeout.connect(on_enemy_timeout)
-
-	display_enemy()
+		
+		if first_trick:
+			cur_enemy.timing_player.animation_started.connect(on_first_trick)
 
 
 func display_enemy() -> void:
@@ -558,8 +566,50 @@ func victory() -> void:
 
 	level_cleared = true
 
+	if cur_level == 5:
+		win.set_advance(false)
+	else:
+		win.set_advance(true)
+	
 	win.visible = true
 	player.set_receive_input(false)
+
+
+# ==============================
+# TUTORIAL: FIRST Trick
+# ==============================
+func on_first_trick(anim_name: String) -> void:
+	if not anim_name.begins_with("trick"):
+		return
+	
+	if tutorial_done or not first_trick:
+		return
+
+	if tutorial_step != TutorialStep.NONE:
+		return
+	
+	cur_enemy.timing_player.animation_started.disconnect(on_first_trick)
+	
+	tutorial_step = TutorialStep.TRICK
+
+	tutorial.visible = true
+	tutorial.first_trick.visible = true
+
+	Engine.time_scale = 1e-6
+
+	await get_tree().create_timer(5, true, false, true).timeout
+	on_trick_tutorial_finished()
+
+
+func on_trick_tutorial_finished() -> void:
+	if tutorial_step != TutorialStep.TRICK:
+		return
+
+	first_trick = false
+	tutorial_step = TutorialStep.NONE
+
+	Engine.time_scale = 1.0
+	hide_tutorial()
 
 
 # ==============================
@@ -578,8 +628,7 @@ func on_first_parry(state: Enemy.State) -> void:
 	if not player.has_signal("parrying"):
 		return
 
-	if player.is_stun:
-		player.is_stun = false
+	player.on_first_parry()
 
 	tutorial_step = TutorialStep.PARRY
 
@@ -626,6 +675,8 @@ func on_first_slash(state: Enemy.State) -> void:
 	if not player.has_signal("slashing"):
 		return
 
+	player.on_first_slash()
+	
 	tutorial_step = TutorialStep.SLASH
 
 	tutorial.visible = true
@@ -671,7 +722,7 @@ func on_enemy_timeout() -> void:
 		Engine,
 		"time_scale",
 		1.0,
-		3.0
+		5
 	)
 
 	timeout_tween.finished.connect(
@@ -698,6 +749,7 @@ func hide_tutorial() -> void:
 	tutorial.first_parry.visible = false
 	tutorial.first_slash.visible = false
 	tutorial.first_timeout.visible = false
+	tutorial.first_trick.visible = false
 
 	tutorial.visible = false
 
