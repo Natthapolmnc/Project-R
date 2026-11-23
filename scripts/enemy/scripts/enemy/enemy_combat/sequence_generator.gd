@@ -12,272 +12,153 @@ enum SequenceType {
 }
 
 const TYPE_NAMES: Array[String] = [
-	"balanced",
-	"rush_then_slow",
-	"delay_before_attack",
-	"burst_pause",
-	"slow_then_rush",
-	"bait_and_strike",
-	"chaotic"
+	"balanced", "rush_then_slow", "delay_before_attack", "burst_pause",
+	"slow_then_rush", "bait_and_strike", "chaotic"
 ]
 
-
-# --------------------------------------------------
-# TIMING
-# --------------------------------------------------
-
-## Minimum time between the STARTS of two moves.
+# --- Timing ---
 const MIN_GAP: float = 0.70
-
-## Reserve some time after the final move starts.
+const START_DELAY: float = 0.35
 const END_BUFFER: float = 0.80
 
+# Desired action density; duration determines the approximate counts.
+const ATTACK_INTERVAL: float = 2.00
+const TRICK_INTERVAL: float = 2.80
 
-# --------------------------------------------------
-# HP / STABILITY BALANCING
-# --------------------------------------------------
+# A phase pause is a TOTAL gap, not extra time added to a gap.
+# Most importantly, it cannot swallow the time budget for burst two.
+const MAX_BURST_PAUSE: float = 1.5
+const BURST_PAUSE_RATIO: float = 0.12
 
-## Minimum extra missed attacks the player can tolerate.
+# BURST_PAUSE is built as repeating clusters: a a a t | pause | a a a t.
+# These durations determine the number of clusters and their rhythm.
+const BURST_CYCLE_TIME: float = 5.0
+const BURST_MIN_ATTACKS: int = 2
+const BURST_MIN_PAUSE: float = 1.10
+const BURST_TARGET_ATTACK_GAP: float = 1.00
+const MAX_OPENING_DELAY: float = 2.40
+const OPENING_DELAY_RATIO: float = 0.13
+
+# Extra time kept available when choosing the move count, so a phase
+# can actually have a distinct pause even at higher difficulties.
+const PHASE_GAP_RESERVE: float = 1.00
+
+# --- Fairness ---
 const MIN_MISS_ALLOWANCE: int = 2
-
-## Additional attack opportunities relative to
-## the greater of HP and stability.
 const MISS_ALLOWANCE_RATIO: float = 0.30
 
-## Preserve at least one trick in every sequence.
-const MIN_TRICKS: int = 1
 
-
-# --------------------------------------------------
-# GENERATION
-# --------------------------------------------------
-
-## Returns:
-## {
-##   "type": String,
-##   "sequence": Array[String],
-##   "attack_count": int,
-##   "trick_count": int,
-##   "required_hits": int,
-##   "required_attacks": int,
-##   "miss_allowance": int,
-##   "hp": int,
-##   "stability": int
-## }
-##
-## Example sequence entry: "2.50,a"
-##
-## sequence_type:
-## -1 = use EnemyProfile.sequence_pattern
-## 0-6 = explicitly select SequenceType
-
+## -1 reads profile.sequence_pattern (0 = random).
+## Returns {"type", "sequence", "attack_count", "trick_count",
+##          "required_hits", "required_attacks", "miss_allowance",
+##          "hp", "stability"}.
+## Entries look like "2.50,a" and "3.20,t".
 static func generate(
 	profile: EnemyProfile,
 	duration: float,
 	sequence_type: int = -1
 ) -> Dictionary:
-
-	var sequence: Array[String] = []
-
-	if profile == null:
-		push_warning("SequenceGenerator: missing EnemyProfile")
-		return {
-			"type": "invalid",
-			"sequence": sequence
-		}
-
-	# ------ Enemy Stats ------
-
-	var hp: int = profile.base_hp
-	var stability: int = profile.max_stab
-
-	if duration <= END_BUFFER:
-		push_warning("SequenceGenerator: invalid duration")
-		return {
-			"type": "invalid",
-			"sequence": sequence
-		}
-
-	if hp < 1 and stability < 1:
-		push_warning("SequenceGenerator: invalid HP and stability")
-		return {
-			"type": "invalid",
-			"sequence": sequence
-		}
-
-	# ------ Pattern Selection ------
+	var empty: Array[String] = []
+	if profile == null or duration <= START_DELAY + END_BUFFER:
+		push_warning("SequenceGenerator: missing profile or invalid duration")
+		return {"type": "invalid", "sequence": empty}
 
 	if sequence_type == -1:
 		if profile.sequence_pattern == 0:
-			sequence_type = randi_range(
-				0,
-				TYPE_NAMES.size() - 1
-			)
+			sequence_type = randi_range(0, TYPE_NAMES.size() - 1)
 		else:
 			sequence_type = profile.sequence_pattern - 1
 
 	if sequence_type < 0 or sequence_type >= TYPE_NAMES.size():
 		push_warning("SequenceGenerator: invalid sequence type")
-		return {
-			"type": "invalid",
-			"sequence": sequence
-		}
+		return {"type": "invalid", "sequence": empty}
 
-	# ------ HP / Stability Requirements ------
+	var hp: int = profile.base_hp
+	var stability: int = profile.max_stab
+	var required_hits: int = maxi(hp, stability)
+	if required_hits < 1:
+		push_warning("SequenceGenerator: invalid HP/stability")
+		return {"type": "invalid", "sequence": empty}
 
-	# Use whichever stat requires more successful hits.
-	var required_hits: int = maxi(
-		hp,
-		stability
-	)
-
-	# Additional opportunities for missed attacks.
 	var miss_allowance: int = maxi(
 		MIN_MISS_ALLOWANCE,
-		ceili(
-			float(required_hits)
-			* MISS_ALLOWANCE_RATIO
-		)
+		ceili(float(required_hits) * MISS_ALLOWANCE_RATIO)
 	)
+	var required_attacks: int = required_hits + miss_allowance
 
-	# Minimum number of attack opportunities.
-	var required_attacks: int = (
-		required_hits + miss_allowance
-	)
-
-	# Minimum total moves, including tricks.
-	var minimum_count: int = (
-		required_attacks + MIN_TRICKS
-	)
-
-	# ------ Duration Capacity ------
-
-	var usable_duration: float = (
-		duration - END_BUFFER
-	)
-
-	var max_count: int = (
-		floori(usable_duration / MIN_GAP) + 1
-	)
-
-	# Reject impossible configurations.
-	if minimum_count > max_count:
-
-		var minimum_time: float = (
-			float(minimum_count - 1) * MIN_GAP
-			+ END_BUFFER
+	# BURST_PAUSE has its own time-budgeted, repeating a...a,t,pause
+	# design. A fixed two-phase split cannot create clustered attacks.
+	if sequence_type == SequenceType.BURST_PAUSE:
+		return _generate_clustered_bursts(
+			profile, duration, required_hits,
+			required_attacks, miss_allowance
 		)
 
+	# Duration chooses counts independently. More required attacks do
+	# not automatically delete tricks or make a pattern all attacks.
+	var usable_end: float = duration - END_BUFFER
+	var timeline_span: float = usable_end - START_DELAY
+	var minimum_tricks: int = maxi(1, ceili(duration / 8.0))
+
+	var attack_count: int = maxi(
+		required_attacks, roundi(timeline_span / ATTACK_INTERVAL)
+	)
+	var trick_count: int = maxi(
+		minimum_tricks, roundi(timeline_span / TRICK_INTERVAL)
+	)
+
+	# Every bait must be followed by a real attack.
+	if sequence_type == SequenceType.BAIT_AND_STRIKE:
+		trick_count = mini(trick_count, attack_count)
+
+	# Budget a little spare time for a distinct middle/opening pause.
+	# No fixed number of attacks or tricks is imposed beyond fairness.
+	var reserved_extra: float = 0.0
+	if sequence_type == SequenceType.DELAY_BEFORE_ATTACK:
+		reserved_extra = minf(PHASE_GAP_RESERVE, timeline_span * 0.08)
+
+	var max_moves: int = floori(
+		(timeline_span - reserved_extra) / MIN_GAP
+	) + 1
+
+	if required_attacks + minimum_tricks > max_moves:
 		push_warning(
-			"SequenceGenerator: HP %d / Stability %d requires at least %.2f seconds"
-			% [hp, stability, minimum_time]
+			"SequenceGenerator: %d attacks + %d tricks cannot fit in %.2fs with pattern '%s'"
+			% [required_attacks, minimum_tricks, duration, TYPE_NAMES[sequence_type]]
 		)
-
 		return {
-			"type": TYPE_NAMES[sequence_type],
-			"sequence": sequence,
-			"attack_count": 0,
-			"trick_count": 0,
+			"type": TYPE_NAMES[sequence_type], "sequence": empty,
+			"attack_count": 0, "trick_count": 0,
 			"required_hits": required_hits,
 			"required_attacks": required_attacks,
 			"miss_allowance": miss_allowance,
-			"hp": hp,
-			"stability": stability
+			"hp": hp, "stability": stability
 		}
 
-	# ------ Move Count ------
+	# Reduce only OPTIONAL moves if we hit the physical time capacity.
+	while attack_count + trick_count > max_moves:
+		if attack_count > required_attacks and (
+			attack_count >= trick_count or trick_count <= minimum_tricks
+		):
+			attack_count -= 1
+		elif trick_count > minimum_tricks:
+			trick_count -= 1
+		else:
+			attack_count -= 1
 
-	var target_gap: float = _get_target_gap(
-		sequence_type
-	)
+	var count: int = attack_count + trick_count
 
-	var target_count: int = roundi(
-		usable_duration / target_gap
-	)
-
-	var count: int = clampi(
-		target_count,
-		minimum_count,
-		max_count
-	)
-
-	# ------ Attack / Trick Distribution ------
-
-	var attack_ratio: float = _get_attack_ratio(
-		sequence_type
-	)
-
-	var attack_count: int = maxi(
-		required_attacks,
-		roundi(float(count) * attack_ratio)
-	)
-
-	# Reserve enough room for tricks.
-	attack_count = mini(
-		attack_count,
-		count - MIN_TRICKS
-	)
-
-	var trick_count: int = (
-		count - attack_count
-	)
-
-	# ------ Build Actions ------
-
+	# Pattern controls BOTH action placement and timing.
 	var actions: Array[String] = _build_actions(
-		attack_count,
-		trick_count,
-		sequence_type
+		count, trick_count, sequence_type
+	)
+	var times: Array[float] = _build_timestamps(
+		actions, usable_end, sequence_type, duration
 	)
 
-	# ------ Timing Distribution ------
-
-	var minimum_duration: float = (
-		MIN_GAP * float(count - 1)
-	)
-
-	var spare_time: float = maxf(
-		0.0,
-		usable_duration - minimum_duration
-	)
-
-	var weights: Array[float] = []
-	var total_weight: float = 0.0
-
-	for slot in range(count + 1):
-
-		var weight: float = _gap_weight(
-			sequence_type,
-			slot,
-			actions
-		)
-
-		weights.append(weight)
-		total_weight += weight
-
-	# ------ Generate Timestamps ------
-
-	var cursor: float = (
-		spare_time * weights[0] / total_weight
-	)
-
+	var sequence: Array[String] = []
 	for i in range(count):
-
-		sequence.append(
-			"%.2f,%s" % [cursor, actions[i]]
-		)
-
-		if i < count - 1:
-
-			cursor += MIN_GAP
-
-			cursor += (
-				spare_time
-				* weights[i + 1]
-				/ total_weight
-			)
-
-	# ------ Return ------
+		sequence.append("%.2f,%s" % [times[i], actions[i]])
 
 	return {
 		"type": TYPE_NAMES[sequence_type],
@@ -293,263 +174,340 @@ static func generate(
 
 
 # --------------------------------------------------
-# MOVE DENSITY
+# BURST_PAUSE: tight attacks -> trick -> short pause -> repeat.
 # --------------------------------------------------
+## Tricks land at the END of each cluster, just before the pause.
+## Time allocation includes every cluster and pause, so a later burst
+## can never be squeezed out by one oversized gap.
+static func _generate_clustered_bursts(
+	profile: EnemyProfile,
+	duration: float,
+	required_hits: int,
+	required_attacks: int,
+	miss_allowance: int
+) -> Dictionary:
+	var timeline_span: float = duration - START_DELAY - END_BUFFER
+	var empty: Array[String] = []
 
-## Lower gap = more moves in the same duration.
+	# About one cluster every five seconds. Short fights can use one.
+	var burst_count: int = maxi(1, roundi(duration / BURST_CYCLE_TIME))
+	var wanted_pause: float = clampf(
+		duration * BURST_PAUSE_RATIO,
+		BURST_MIN_PAUSE,
+		MAX_BURST_PAUSE
+	)
 
-static func _get_target_gap(
-	sequence_type: int
-) -> float:
+	# Each cluster must contain several attacks, then one fake attack.
+	# Reduce the number of clusters if stability demands more attacks
+	# than would otherwise fit. Keep at least two if feasible.
+	while burst_count > 1:
+		var attacks_needed: int = maxi(
+			required_attacks,
+			burst_count * BURST_MIN_ATTACKS
+		)
+		var minimum_span: float = (
+			float(attacks_needed) * MIN_GAP
+			+ float(burst_count - 1) * BURST_MIN_PAUSE
+		)
+		if minimum_span <= timeline_span + 0.0001:
+			break
+		burst_count -= 1
 
-	match sequence_type:
+	var minimum_attacks: int = maxi(
+		required_attacks,
+		burst_count * BURST_MIN_ATTACKS
+	)
+	var minimum_span: float = (
+		float(minimum_attacks) * MIN_GAP
+		+ float(burst_count - 1) * BURST_MIN_PAUSE
+	)
+	if minimum_span > timeline_span + 0.0001:
+		push_warning(
+			"SequenceGenerator: %d attacks cannot fit in %.2fs with BURST_PAUSE"
+			% [required_attacks, duration]
+		)
+		return {
+			"type": TYPE_NAMES[SequenceType.BURST_PAUSE],
+			"sequence": empty,
+			"attack_count": 0,
+			"trick_count": 0,
+			"required_hits": required_hits,
+			"required_attacks": required_attacks,
+			"miss_allowance": miss_allowance,
+			"hp": profile.base_hp,
+			"stability": profile.max_stab
+		}
 
-		SequenceType.BALANCED:
-			return 1.8
+	# Calculate count from remaining time, not a fixed A/T ratio.
+	# Every group has one trick after its attack cluster.
+	var pause_count: int = burst_count - 1
+	var target_attacks: int = roundi(
+		(timeline_span - float(pause_count) * wanted_pause)
+		/ BURST_TARGET_ATTACK_GAP
+	)
+	var max_attacks: int = floori(
+		(timeline_span - float(pause_count) * BURST_MIN_PAUSE)
+		/ MIN_GAP
+	)
+	var attack_count: int = clampi(
+		target_attacks, minimum_attacks, max_attacks
+	)
+	var trick_count: int = burst_count
 
-		SequenceType.RUSH_THEN_SLOW:
-			return 1.5
+	# Divide attacks reasonably evenly; allow one extra attack in a
+	# different burst each time, rather than always in the first.
+	var attacks_per_burst: Array[int] = []
+	for i in range(burst_count):
+		attacks_per_burst.append(BURST_MIN_ATTACKS)
+	var extra_attacks: int = attack_count - burst_count * BURST_MIN_ATTACKS
+	var rotating_start: int = randi_range(0, burst_count - 1)
+	for i in range(extra_attacks):
+		attacks_per_burst[(rotating_start + i) % burst_count] += 1
 
-		SequenceType.DELAY_BEFORE_ATTACK:
-			return 2.1
+	# Pauses have a hard cap and share the timeline with ALL attacks.
+	# If stability is high, shorten pauses rather than crushing the
+	# last attack cluster beyond the time limit.
+	var pause_length: float = 0.0
+	if pause_count > 0:
+		var affordable_pause: float = (
+			timeline_span - float(attack_count) * MIN_GAP
+		) / float(pause_count)
+		pause_length = minf(wanted_pause, affordable_pause)
 
-		SequenceType.BURST_PAUSE:
-			return 1.7
+	# The remaining time is allocated to gaps INSIDE the bursts.
+	# Internal gaps remain short and have only mild variation.
+	var internal_spare: float = (
+		timeline_span
+		- float(pause_count) * pause_length
+		- float(attack_count) * MIN_GAP
+	)
+	var internal_weights: Array[float] = []
+	var weight_sum: float = 0.0
+	for i in range(attack_count):
+		var weight: float = randf_range(0.88, 1.12)
+		internal_weights.append(weight)
+		weight_sum += weight
 
-		SequenceType.SLOW_THEN_RUSH:
-			return 1.7
+	var sequence: Array[String] = []
+	var cursor: float = START_DELAY
+	var gap_index: int = 0
+	for burst in range(burst_count):
+		for attack in range(attacks_per_burst[burst]):
+			sequence.append("%.2f,a" % cursor)
+			cursor += MIN_GAP + (
+				internal_spare * internal_weights[gap_index] / weight_sum
+			)
+			gap_index += 1
 
-		SequenceType.BAIT_AND_STRIKE:
-			return 1.5
+		# The false alarm is the final event BEFORE the pause.
+		sequence.append("%.2f,t" % cursor)
+		if burst < burst_count - 1:
+			cursor += pause_length
 
-		SequenceType.CHAOTIC:
-			return randf_range(1.3, 2.5)
-
-	return 1.8
+	return {
+		"type": TYPE_NAMES[SequenceType.BURST_PAUSE],
+		"sequence": sequence,
+		"attack_count": attack_count,
+		"trick_count": trick_count,
+		"required_hits": required_hits,
+		"required_attacks": required_attacks,
+		"miss_allowance": miss_allowance,
+		"hp": profile.base_hp,
+		"stability": profile.max_stab
+	}
 
 
 # --------------------------------------------------
-# ATTACK RATIO
+# ACTION PLACEMENT: the selected pattern matters.
 # --------------------------------------------------
-
-## Preferred proportion of attacks.
-## HP/stability requirements can override this ratio.
-
-static func _get_attack_ratio(
-	sequence_type: int
-) -> float:
-
-	match sequence_type:
-
-		SequenceType.BALANCED:
-			return 0.50
-
-		SequenceType.RUSH_THEN_SLOW:
-			return 0.65
-
-		SequenceType.DELAY_BEFORE_ATTACK:
-			return 0.60
-
-		SequenceType.BURST_PAUSE:
-			return 0.65
-
-		SequenceType.SLOW_THEN_RUSH:
-			return 0.65
-
-		SequenceType.BAIT_AND_STRIKE:
-			return 0.55
-
-		SequenceType.CHAOTIC:
-			return 0.60
-
-	return 0.50
-
-
-# --------------------------------------------------
-# ACTION GENERATION
-# --------------------------------------------------
-
 static func _build_actions(
-	attack_count: int,
+	count: int,
 	trick_count: int,
 	sequence_type: int
 ) -> Array[String]:
-
 	var actions: Array[String] = []
-
-	match sequence_type:
-
-		SequenceType.BALANCED, SequenceType.BURST_PAUSE:
-
-			actions = _build_spaced_actions(
-				attack_count,
-				trick_count
-			)
-
-		SequenceType.RUSH_THEN_SLOW:
-
-			# Attack phase followed by trick phase.
-			for i in range(attack_count):
-				actions.append("a")
-
-			for i in range(trick_count):
-				actions.append("t")
-
-		SequenceType.DELAY_BEFORE_ATTACK, SequenceType.SLOW_THEN_RUSH:
-
-			# Trick phase followed by attack phase.
-			for i in range(trick_count):
-				actions.append("t")
-
-			for i in range(attack_count):
-				actions.append("a")
-
-		SequenceType.BAIT_AND_STRIKE:
-
-			# Place tricks before attacks where possible.
-			var remaining_attacks: int = attack_count
-			var remaining_tricks: int = trick_count
-
-			while remaining_attacks > 0:
-
-				if remaining_tricks > 0:
-					actions.append("t")
-					remaining_tricks -= 1
-
-				actions.append("a")
-				remaining_attacks -= 1
-
-			while remaining_tricks > 0:
-				actions.append("t")
-				remaining_tricks -= 1
-
-		SequenceType.CHAOTIC:
-
-			for i in range(attack_count):
-				actions.append("a")
-
-			for i in range(trick_count):
-				actions.append("t")
-
-			actions.shuffle()
-
-	return actions
-
-
-# --------------------------------------------------
-# EVENLY MIXED ACTIONS
-# --------------------------------------------------
-
-## Spread tricks across attacks rather than placing
-## all tricks at the beginning or end.
-
-static func _build_spaced_actions(
-	attack_count: int,
-	trick_count: int
-) -> Array[String]:
-
-	var actions: Array[String] = []
-
-	var count: int = attack_count + trick_count
-	var used_tricks: int = 0
-	var phase: float = randf()
-
 	for i in range(count):
+		actions.append("a")
+	if trick_count == 0:
+		return actions
 
-		var expected_tricks: int = floori(
-			float(i + 1)
-			* float(trick_count)
-			/ float(count)
-			+ phase
+	# When possible avoid back-to-back tricks. Bait explicitly requires
+	# t -> a, so never place its trick in the last slot.
+	var separation: int = 1
+	if count >= trick_count * 2 - 1:
+		separation = 2
+	if sequence_type == SequenceType.BAIT_AND_STRIKE:
+		separation = 2
+
+	var last_allowed: int = count - 1
+	if sequence_type == SequenceType.BAIT_AND_STRIKE:
+		last_allowed = count - 2
+
+	# Weighted quantiles put tricks throughout the full fight, but
+	# shift their frequency forward/backward depending on the pattern.
+	var centers: Array[float] = []
+	var total_weight: float = 0.0
+	for i in range(count):
+		var p: float = float(i) / float(maxi(1, count - 1))
+		var weight: float = _trick_weight(sequence_type, p)
+		centers.append(total_weight + weight * 0.5)
+		total_weight += weight
+
+	var previous_index: int = -separation
+	for j in range(trick_count):
+		var remaining: int = trick_count - j - 1
+		var low: int = previous_index + separation
+		var high: int = last_allowed - remaining * separation
+		var target: float = (
+			(float(j) + 0.5) / float(trick_count) * total_weight
 		)
 
-		if expected_tricks > used_tricks:
-			actions.append("t")
-			used_tricks += 1
-		else:
-			actions.append("a")
+		var best_index: int = low
+		var best_distance: float = INF
+		for candidate in range(low, high + 1):
+			var distance: float = absf(centers[candidate] - target)
+			if distance < best_distance:
+				best_distance = distance
+				best_index = candidate
+
+		# These patterns have a deliberate opening bait.
+		if j == 0 and (
+			sequence_type == SequenceType.BAIT_AND_STRIKE
+			or sequence_type == SequenceType.DELAY_BEFORE_ATTACK
+		):
+			best_index = 0
+
+		actions[best_index] = "t"
+		previous_index = best_index
 
 	return actions
 
 
+static func _trick_weight(sequence_type: int, progress: float) -> float:
+	match sequence_type:
+		SequenceType.RUSH_THEN_SLOW:
+			# Early attacks; relatively more tricks toward the end.
+			return lerpf(0.55, 1.45, progress)
+		SequenceType.SLOW_THEN_RUSH:
+			# Early tricks; relatively more attacks toward the end.
+			return lerpf(1.45, 0.55, progress)
+		SequenceType.DELAY_BEFORE_ATTACK:
+			return lerpf(1.35, 0.75, progress)
+		SequenceType.CHAOTIC:
+			return randf_range(0.35, 1.65)
+		_:
+			return 1.0
+
+
 # --------------------------------------------------
-# TIMING WEIGHTS
+# TIME PLACEMENT: no phase gets to use all free time.
 # --------------------------------------------------
+static func _build_timestamps(
+	actions: Array[String],
+	usable_end: float,
+	sequence_type: int,
+	duration: float
+) -> Array[float]:
+	var result: Array[float] = []
+	var count: int = actions.size()
+	if count == 0:
+		return result
+	if count == 1:
+		result.append(START_DELAY)
+		return result
+
+	var gap_count: int = count - 1
+	var span: float = usable_end - START_DELAY
+	var extra: float = maxf(0.0, span - MIN_GAP * float(gap_count))
+
+	# Special gap is a fixed, capped portion of the entire duration.
+	# Remaining time is spread across ALL other gaps, including those
+	# after the pause: this protects the second burst.
+	var special_slot: int = -1
+	var special_gap: float = 0.0
+
+	if sequence_type == SequenceType.DELAY_BEFORE_ATTACK:
+		# The first trick is followed by a noticeable, bounded delay.
+		special_slot = 1
+		var wanted: float = minf(
+			MAX_OPENING_DELAY, duration * OPENING_DELAY_RATIO
+		)
+		special_gap = _capped_phase_gap(
+			wanted, span, gap_count, MAX_OPENING_DELAY
+		)
+
+	var weights: Array[float] = []
+	var weight_sum: float = 0.0
+	for slot in range(1, count):
+		var weight: float = _gap_weight(
+			sequence_type, slot, count, actions
+		)
+		weights.append(weight)
+		if slot != special_slot:
+			weight_sum += weight
+
+	var distributable_extra: float = extra
+	if special_slot != -1:
+		distributable_extra -= special_gap - MIN_GAP
+		distributable_extra = maxf(distributable_extra, 0.0)
+
+	var cursor: float = START_DELAY
+	result.append(cursor)
+	for slot in range(1, count):
+		var gap: float
+		if slot == special_slot:
+			gap = special_gap
+		else:
+			gap = MIN_GAP + (
+				distributable_extra * weights[slot - 1] / weight_sum
+			)
+		cursor += gap
+		result.append(cursor)
+
+	return result
+
+
+static func _capped_phase_gap(
+	wanted: float,
+	span: float,
+	gap_count: int,
+	max_pause: float
+) -> float:
+	# Cap the TOTAL pause while preserving MIN_GAP for every other move.
+	var largest_possible: float = maxf(
+		MIN_GAP,
+		span - MIN_GAP * float(gap_count - 1)
+	)
+	var normal_gap: float = span / float(gap_count)
+	var distinctive_gap: float = maxf(wanted, normal_gap + 0.35)
+	return clampf(
+		distinctive_gap,
+		MIN_GAP,
+		minf(max_pause, largest_possible)
+	)
+
 
 static func _gap_weight(
 	sequence_type: int,
 	slot: int,
+	count: int,
 	actions: Array[String]
 ) -> float:
-
-	var count: int = actions.size()
-
-	if slot == count:
-		return 0.5
-
+	var progress: float = (
+		float(slot - 1) / float(maxi(1, count - 2))
+	)
 	match sequence_type:
-
-		SequenceType.BALANCED:
-			return 1.0
-
 		SequenceType.RUSH_THEN_SLOW:
-
-			if slot == 0:
-				return 0.15
-
-			return lerpf(
-				0.2,
-				3.0,
-				float(slot - 1) / float(maxi(1, count - 2))
-			)
-
-		SequenceType.DELAY_BEFORE_ATTACK:
-
-			if slot == 0:
-				return 0.5
-
-			# Large pause between tricks and first attack.
-			if actions[slot] == "a" and actions[slot - 1] == "t":
-				return 5.0
-
-			return 0.4
-
-		SequenceType.BURST_PAUSE:
-
-			var midpoint: int = ceili(float(count) / 2.0)
-
-			if slot == midpoint:
-				return 5.0
-
-			return 0.25
-
+			# Intervals steadily grow, but never exponentially.
+			return lerpf(0.65, 1.35, progress)
 		SequenceType.SLOW_THEN_RUSH:
-
-			if slot == 0:
-				return 0.3
-
-			return lerpf(
-				3.0,
-				0.2,
-				float(slot - 1) / float(maxi(1, count - 2))
-			)
-
+			return lerpf(1.35, 0.65, progress)
 		SequenceType.BAIT_AND_STRIKE:
-
-			if slot == 0:
-				return 0.5
-
-			# Quick attack after a trick.
-			if actions[slot] == "a" and actions[slot - 1] == "t":
-				return 0.15
-
-			# Longer pause before the next bait.
-			if actions[slot] == "t":
-				return 2.5
-
-			return 0.7
-
+			# Short follow-up after every bait, longer between pairs.
+			if actions[slot - 1] == "t" and actions[slot] == "a":
+				return 0.20
+			return 1.30
 		SequenceType.CHAOTIC:
-			return randf_range(0.15, 3.0)
-
-	return 1.0
+			return randf_range(0.50, 1.50)
+		_:
+			return 1.0

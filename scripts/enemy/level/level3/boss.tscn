@@ -45,9 +45,9 @@ metadata/_custom_type_script = "uid://drxwbarxhjxnc"
 
 [sub_resource type="Resource" id="Resource_m5ln5"]
 script = ExtResource("3_ifn2w")
-sequence_pattern = 7
+sequence_pattern = 4
 base_hp = 2
-max_stab = 7
+max_stab = 5
 initial_stance = &"up"
 idle_by_stance = Dictionary[StringName, StringName]({
 &"down": &"idle_down",
@@ -2018,7 +2018,7 @@ anti_aliasing = false
 [node name="Boss" type="Node3D" unique_id=1970614869 node_paths=PackedStringArray("effect_origin", "count_down_visual")]
 script = ExtResource("1_rr3d0")
 profile = SubResource("Resource_m5ln5")
-stability_recovery_delay = 0.1
+stability_recovery_delay = 1.0
 stability_recovery_rate = 0.1
 effect_origin = NodePath("MeshInstance3D")
 count_down_visual = NodePath("enemyGUI/GUIviewport/GUIcontrol/VBoxContainer/count_down_visual")
