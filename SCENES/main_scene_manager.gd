@@ -595,6 +595,8 @@ func on_first_trick(anim_name: String) -> void:
 	tutorial.visible = true
 	tutorial.first_trick.visible = true
 
+	player.set_receive_input(false)
+
 	Engine.time_scale = 1e-6
 
 	await get_tree().create_timer(5, true, false, true).timeout
@@ -607,6 +609,8 @@ func on_trick_tutorial_finished() -> void:
 
 	first_trick = false
 	tutorial_step = TutorialStep.NONE
+
+	player.set_receive_input(true)
 
 	Engine.time_scale = 1.0
 	hide_tutorial()
