@@ -13,6 +13,7 @@ extends Node
 @onready var retry: CanvasLayer = $"../Retry"
 @onready var win: CanvasLayer = $"../Win"
 @onready var tutorial: Tutorial = $"../Tutorial"
+@onready var level_number: Label = $"../LevelNumber"
 
 
 # ==============================
@@ -209,6 +210,7 @@ func level_initialization(advance: bool) -> void:
 	reset_tutorial_overlay()
 	reset_spawn_rotation()
 	clear_enemy()
+	show_level()
 
 	is_game_over = false
 	level_cleared = false
@@ -254,7 +256,10 @@ func level_initialization(advance: bool) -> void:
 func spawn_enemy(pause_enemy: bool = false) -> void:
 	if cur_index >= cur_level_profiles.size():
 		return
-
+	if cur_level == 3:
+		spawn_boss(false)
+		return
+	
 	var profile: EnemyProfile = cur_level_profiles[cur_index]
 	var duration: float = generated_time[cur_index]
 
@@ -296,6 +301,39 @@ func spawn_enemy(pause_enemy: bool = false) -> void:
 		
 		if first_trick:
 			cur_enemy.timing_player.animation_started.connect(on_first_trick)
+
+
+func spawn_boss(pause_enemy: bool = false) -> void:
+	if cur_index >= cur_level_profiles.size():
+		return
+
+	#var profile: EnemyProfile = cur_level_profiles[cur_index]
+	#var duration: float = generated_time[cur_index]
+
+	cur_index += 1
+
+	#cur_enemy = enemy_template.instantiate() as Enemy
+
+	#if cur_enemy == null:
+		#push_error(
+			#"Enemy template must instantiate an Enemy."
+		#)
+		#return
+#
+	#cur_enemy.set_profile(profile)
+	#cur_enemy.set_duration(duration)
+
+	if pause_enemy:
+		cur_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+
+	player.cur_enemy = cur_enemy
+
+	cur_enemy.enemy_delta.connect(time_tick)
+	cur_enemy.enemy_timeout.connect(game_over)
+	cur_enemy.strike_reached.connect(game_over)
+	cur_enemy.enemy_died.connect(on_enemy_died)
+
+	display_enemy()
 
 
 func display_enemy() -> void:
@@ -766,3 +804,10 @@ func reset_tutorial_overlay() -> void:
 	Engine.time_scale = 1.0
 
 	hide_tutorial()
+
+
+# ==============================
+# SHOW LEVEL NUMBER
+# ==============================
+func show_level() -> void:
+	level_number.text = str("Level: ", cur_level)
