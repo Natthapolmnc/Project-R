@@ -26,8 +26,10 @@ const base_time: float = 20.0
 # ENEMY / LEVEL DATA
 # ==============================
 @export var enemy_template: PackedScene = preload("res://scripts/enemy/prefabs/enemy.tscn")
+@export var boss: PackedScene = preload("res://scripts/enemy/level/level3/boss.tscn")
 
-@export var cur_level: int = 4
+
+@export var cur_level: int = 1
 @export var level: String = "res://scripts/enemy/level/"
 
 var cur_level_profiles: Array[EnemyProfile] = []
@@ -230,7 +232,7 @@ func level_initialization(advance: bool) -> void:
 
 	load_level_profiles()
 
-	if cur_level_profiles.is_empty():
+	if cur_level_profiles.is_empty() and not cur_level == 3:
 		push_warning(
             "No enemy profiles found for level "
 			+ str(cur_level)
@@ -252,6 +254,9 @@ func level_initialization(advance: bool) -> void:
 # ENEMY SPAWNING
 # ==============================
 func spawn_enemy(pause_enemy: bool = false) -> void:
+	if cur_level == 3:
+		spawn_boss(false)
+		return
 	if cur_index >= cur_level_profiles.size():
 		return
 
@@ -296,6 +301,28 @@ func spawn_enemy(pause_enemy: bool = false) -> void:
 		
 		if first_trick:
 			cur_enemy.timing_player.animation_started.connect(on_first_trick)
+
+
+func spawn_boss(pause_enemy: bool = false) -> void:
+	cur_enemy = boss.instantiate() as Enemy
+
+	if cur_enemy == null:
+		push_error(
+            "Not like this, bro. Where is the BOSS !"
+		)
+		return
+
+	if pause_enemy:
+		cur_enemy.process_mode = Node.PROCESS_MODE_DISABLED
+
+	player.cur_enemy = cur_enemy
+
+	cur_enemy.enemy_delta.connect(time_tick)
+	cur_enemy.enemy_timeout.connect(game_over)
+	cur_enemy.strike_reached.connect(game_over)
+	cur_enemy.enemy_died.connect(on_enemy_died)
+
+	display_enemy()
 
 
 func display_enemy() -> void:

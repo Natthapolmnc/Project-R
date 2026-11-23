@@ -111,7 +111,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0017477274, 0, 0.000344395
 
 [node name="MainSceneManager" type="Node3D" parent="." unique_id=1949924447]
 script = ExtResource("3_jsldp")
-cur_level = 1
+cur_level = 3
 min_turn_angle = 30.0
 max_turn_angle = 125.0
 turn_duration = 0.5

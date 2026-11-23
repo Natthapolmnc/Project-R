@@ -23,7 +23,7 @@ enum State { PASSIVE, ATTACK, DOWN }
 
 @export_category("Sequence")
 @export_range(1, 99, 1) var cur_level: int = 1
-@export_range(1.0, 120.0, 0.1) var sequence_duration: float = 12.0
+@export_range(1.0, 120.0, 0.1) var sequence_duration: float = 20.0
 @export var auto_generate_sequence: bool = true
 ## Manual entries are absolute timestamps: "1.0,t", "3.5,a", etc.
 ## Used only when Auto Generate Sequence is turned off in the Inspector.
@@ -78,7 +78,7 @@ func _ready() -> void:
 		set_process(false)
 		return
 	timing_player.animation_finished.connect(_on_animation_finished)
-	count_down_visual.countdown_time=sequence_duration
+	count_down_visual.countdown_time = sequence_duration
 	count_down_visual.clocking=true
 	set_clocking(true)
 	
