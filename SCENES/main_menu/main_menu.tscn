@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://deta5qxynpknq" path="res://SCENES/main_menu/input_manager.gd" id="1_oofpe"]
 [ext_resource type="Texture2D" uid="uid://cnj0ninjrig4r" path="res://SCENES/sprite/project_r_UI_box.png" id="2_4ya1h"]
 [ext_resource type="Texture2D" uid="uid://0vckg4ls3by" path="res://SCENES/main_menu/RoninRush-whiteBG.png" id="3_c22kn"]
+[ext_resource type="FontFile" uid="uid://cecy83kq815kd" path="res://default_font_font.tres" id="3_xhq7v"]
 [ext_resource type="Texture2D" uid="uid://blovfhexsqdpw" path="res://SCENES/assets/Crownel_logo.png" id="4_uw6h3"]
 [ext_resource type="Texture2D" uid="uid://c5solxvvjd8m5" path="res://SCENES/assets/EyesOn._logo.png" id="5_xhq7v"]
 
@@ -36,6 +37,7 @@ offset_right = 680.0
 offset_bottom = 480.5
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_xhq7v")
 text = "Setting"
 
 [node name="PlayButton" type="Button" parent="." unique_id=909885171]
@@ -52,6 +54,7 @@ offset_right = 680.0
 offset_bottom = 432.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_xhq7v")
 text = "Play"
 
 [node name="TextureRect" type="TextureRect" parent="." unique_id=1650864781]

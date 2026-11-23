@@ -6,6 +6,7 @@
 [ext_resource type="Script" uid="uid://bny4ae6x41aaa" path="res://SCENES/main_scene_manager.gd" id="3_jsldp"]
 [ext_resource type="PackedScene" uid="uid://dfsiq5og33nm2" path="res://SCENES/Retry/retry.tscn" id="4_0u8pi"]
 [ext_resource type="PackedScene" uid="uid://b8d1wmkd6heky" path="res://SCENES/win/win.tscn" id="5_0u8pi"]
+[ext_resource type="LabelSettings" uid="uid://dkph1iwqqhyky" path="res://default_font.tres" id="5_5vkv0"]
 [ext_resource type="ArrayMesh" uid="uid://dhsdecsenwkmo" path="res://SCENES/assets/bg/bg_texture.tres" id="6_ys6xq"]
 [ext_resource type="Texture2D" uid="uid://dwtlcrt3whv2j" path="res://SCENES/assets/bg/util/brush.png" id="7_ab6ae"]
 [ext_resource type="Texture2D" uid="uid://dtkfc7xjhbmaj" path="res://SCENES/assets/bg/util/house1.png" id="8_ceyew"]
@@ -59,19 +60,19 @@ orientation = 2
 script/source = "extends MeshInstance3D
 
 func get_random_point() -> Vector3:
-    var plane_mesh: PlaneMesh = mesh as PlaneMesh
-    if plane_mesh == null:
-        push_warning(\"FxPanel needs a PlaneMesh.\")
-        return Vector3.ZERO
+	var plane_mesh: PlaneMesh = mesh as PlaneMesh
+	if plane_mesh == null:
+		push_warning(\"FxPanel needs a PlaneMesh.\")
+		return Vector3.ZERO
 
-    var plane_size: Vector2 = plane_mesh.size
+	var plane_size: Vector2 = plane_mesh.size
 
-    # PlaneMesh.orientation = 2 (FACE_Z) lies in the local XY plane.
-    return Vector3(
-        randf_range(-plane_size.x / 2.0, plane_size.x / 2.0),
-        randf_range(-plane_size.y / 2.0, plane_size.y / 2.0),
-        0.0
-    )
+	# PlaneMesh.orientation = 2 (FACE_Z) lies in the local XY plane.
+	return Vector3(
+		randf_range(-plane_size.x / 2.0, plane_size.x / 2.0),
+		randf_range(-plane_size.y / 2.0, plane_size.y / 2.0),
+		0.0
+	)
 "
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_dtswy"]
@@ -134,6 +135,7 @@ grow_vertical = 2
 theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
 theme_override_constants/outline_size = 10
 theme_override_font_sizes/font_size = 32
+label_settings = ExtResource("5_5vkv0")
 horizontal_alignment = 1
 vertical_alignment = 1
 
